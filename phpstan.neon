@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+
+    level: 5
+
+    ignoreErrors:
+        # Filament macro methods (form, table, infolist) được inject qua mixin — PHPStan không nhìn thấy
+        - '#Call to an undefined method [a-zA-Z\\]+Resource::form\(\)#'
+        - '#Call to an undefined method [a-zA-Z\\]+Resource::table\(\)#'
+        - '#Call to an undefined method [a-zA-Z\\]+Resource::infolist\(\)#'
