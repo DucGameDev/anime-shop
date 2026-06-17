@@ -9,6 +9,16 @@
 
     <link rel="icon" type="image/x-icon" href="/yona.ico">
 
+    {{-- Open Graph / link preview --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ config('app.name', 'AnimeShop') }}">
+    <meta property="og:title" content="{{ $title ?: config('app.name', 'AnimeShop') }}">
+    <meta property="og:description" content="Thiên đường đồ anime — figure, áo, manga, sticker chính hãng. Đồng hành cùng mọi otaku!">
+    <meta property="og:image" content="{{ config('app.url') }}/og-image.png">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ config('app.url') }}/og-image.png">
+
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet">
 
