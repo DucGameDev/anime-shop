@@ -1,4 +1,4 @@
-<x-app-layout title="Giỏ hàng" :noindex="true">
+<x-app-layout title="Giỏ hàng — AnimeShop">
 
     <x-container class="py-8 lg:py-12">
 

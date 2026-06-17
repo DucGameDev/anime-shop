@@ -5,49 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @php
-        $siteTitle   = config('app.name', 'AnimeShop');
-        $pageTitle   = ($title ?? '') ? ($title . ' | ' . $siteTitle) : $siteTitle;
-        $defaultDesc = 'Thiên đường đồ anime chính hãng tại Việt Nam — figure, áo, manga, sticker. Giao hàng toàn quốc, đổi trả 7 ngày.';
-        $metaDesc    = ($description ?? '') ?: $defaultDesc;
-        $canonical   = url()->current();
-    @endphp
-
-    <title>{{ $pageTitle }}</title>
-    <meta name="description" content="{{ $metaDesc }}">
-    <link rel="canonical" href="{{ $canonical }}">
-    @if (!empty($noindex))
-    <meta name="robots" content="noindex,nofollow">
-    @endif
+    <title>{{ $title ?: config('app.name', 'AnimeShop') }}</title>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     {{-- Open Graph / link preview --}}
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="{{ $siteTitle }}">
-    <meta property="og:title" content="{{ $pageTitle }}">
-    <meta property="og:description" content="{{ $metaDesc }}">
+    <meta property="og:site_name" content="{{ config('app.name', 'AnimeShop') }}">
+    <meta property="og:title" content="{{ $title ?: config('app.name', 'AnimeShop') }}">
+    <meta property="og:description" content="Thiên đường đồ anime — figure, áo, manga, sticker chính hãng. Đồng hành cùng mọi otaku!">
     <meta property="og:image" content="{{ config('app.url') }}/og-image.png">
-    <meta property="og:url" content="{{ $canonical }}">
+    <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="{{ config('app.url') }}/og-image.png">
-
-    {{-- JSON-LD: Organization --}}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "{{ $siteTitle }}",
-        "url": "{{ config('app.url') }}",
-        "logo": "{{ config('app.url') }}/og-image.png",
-        "description": "{{ $defaultDesc }}"
-    }
-    </script>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet">
 
-    @stack('head')
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

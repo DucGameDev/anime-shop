@@ -1,35 +1,4 @@
-@php
-    $productDesc = mb_substr(strip_tags($product->description ?? ''), 0, 155);
-@endphp
-
-<x-app-layout :title="$product->name" :description="$productDesc">
-
-    {{-- JSON-LD: Product (đặt trong body — Google chấp nhận) --}}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": "{{ e($product->name) }}",
-        "description": "{{ e(strip_tags($product->description)) }}",
-        "image": "{{ $product->image_url }}",
-        "url": "{{ url()->current() }}",
-        "offers": {
-            "@type": "Offer",
-            "price": "{{ $product->price }}",
-            "priceCurrency": "VND",
-            "availability": "{{ $product->stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
-            "seller": { "@type": "Organization", "name": "{{ config('app.name') }}" }
-        },
-        "breadcrumb": {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "{{ route('home') }}" },
-                { "@type": "ListItem", "position": 2, "name": "Sản phẩm", "item": "{{ route('products.index') }}" },
-                { "@type": "ListItem", "position": 3, "name": "{{ e($product->name) }}", "item": "{{ url()->current() }}" }
-            ]
-        }
-    }
-    </script>
+<x-app-layout :title="$product->name . ' — AnimeShop'">
 
     <x-container class="py-8 lg:py-12">
 
