@@ -15,4 +15,3 @@ tests/
 Dockerfile
 Dockerfile.prod
 docker-compose*.yml
-docker/nginx
