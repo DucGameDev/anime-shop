@@ -5,22 +5,31 @@ FROM composer:2 AS composer
 
 WORKDIR /app
 
+# Install ext-intl required by Filament — composer:2 base image may not have it.
+# icu-dev provides the ICU library; docker-php-ext-install compiles the PHP extension.
+RUN apk add --no-cache icu-dev && docker-php-ext-install intl
+
 # Copy composer manifest first to cache this layer
 COPY composer.json composer.lock ./
 
+# --ignore-platform-reqs: bypass PHP version mismatch between composer:2 base image
+# and packages like openspout that haven't declared PHP 8.5 support yet.
+# The runtime image (stage app) uses PHP 8.2 so platform requirements are satisfied there.
 RUN composer install \
     --no-dev \
     --no-interaction \
     --no-autoloader \
     --no-scripts \
-    --prefer-dist
+    --prefer-dist \
+    --ignore-platform-reqs
 
 # Copy full source so dump-autoload can discover classes
 COPY . .
 
 RUN composer dump-autoload \
     --optimize \
-    --no-dev
+    --no-dev \
+    --ignore-platform-reqs
 
 # =============================================================================
 # Stage 2 — assets: build frontend (Vite + Tailwind)
