@@ -1,7 +1,5 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 
 // Shared fetch helper for cart actions
 function cartFetch(productId, quantity) {
@@ -56,4 +54,4 @@ Alpine.data('productDetail', (productId, maxStock) => ({
     },
 }));
 
-Alpine.start();
+Livewire.start();

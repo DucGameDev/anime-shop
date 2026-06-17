@@ -182,6 +182,5 @@
         <span x-text="message"></span>
     </div>
 
-    @livewireScripts
 </body>
 </html>
