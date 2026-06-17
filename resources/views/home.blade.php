@@ -6,38 +6,36 @@
              alt="AnimeShop — Thế giới anime dành cho bạn"
              class="w-full block">
 
-        {{-- Text overlay — căn trái vào vùng sáng của banner --}}
-        <div class="absolute inset-0 flex items-center">
-            <x-container>
-                <div class="max-w-[44%] lg:max-w-xs xl:max-w-sm">
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary text-white mb-2 hidden sm:inline-flex">
-                        🎌 Hàng mới về mỗi tuần
-                    </span>
-                    <h1 class="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-primary-dark leading-tight">
-                        Thiên đường đồ anime chính hãng tại Việt Nam
-                    </h1>
-                    <p class="mt-1.5 text-xs md:text-sm text-neutral-text hidden md:block leading-relaxed">
-                        Figure, áo, manga, sticker — tất cả trong một shop.<br>
-                        Giao hàng toàn quốc, đổi trả 7 ngày.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mt-3">
-                        <x-button variant="primary" size="sm">
-                            <a href="{{ route('products.index') }}" class="flex items-center gap-1">
-                                Khám phá ngay
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
-                                </svg>
-                            </a>
-                        </x-button>
-                        <x-button variant="secondary" size="sm">
-                            <a href="{{ route('products.index') }}?category=figure">
-                                Xem figure
-                            </a>
-                        </x-button>
-                    </div>
+        {{-- Text overlay — nằm trong vùng trắng bên trái (~38% ảnh) --}}
+        <div class="absolute inset-0 flex items-center pl-6 sm:pl-10 lg:pl-16">
+            <div class="w-[36%] sm:w-[32%] lg:w-[28%]">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-primary text-white mb-2">
+                    🎌 Hàng mới về mỗi tuần
+                </span>
+                <h1 class="text-sm sm:text-lg md:text-2xl lg:text-3xl font-bold text-primary-dark leading-tight">
+                    Thiên đường đồ anime chính hãng tại Việt Nam
+                </h1>
+                <p class="mt-1.5 text-[11px] md:text-sm text-neutral-text hidden sm:block leading-relaxed">
+                    Figure, áo, manga, sticker — tất cả trong một shop.
+                    Giao hàng toàn quốc, đổi trả 7 ngày.
+                </p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <x-button variant="primary" size="sm">
+                        <a href="{{ route('products.index') }}" class="flex items-center gap-1">
+                            Khám phá ngay
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                            </svg>
+                        </a>
+                    </x-button>
+                    <x-button variant="secondary" size="sm">
+                        <a href="{{ route('products.index') }}?category=figure">
+                            Xem figure
+                        </a>
+                    </x-button>
                 </div>
-            </x-container>
+            </div>
         </div>
     </section>
 
