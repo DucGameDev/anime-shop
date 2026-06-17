@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -72,20 +71,12 @@ class ProductResource extends Resource
                     ->required()
                     ->default(0),
 
-                FileUpload::make('image_url')
-                    ->label('Ảnh sản phẩm')
-                    ->image()
-                    ->disk(app()->environment('production') ? 's3' : 'public')
-                    ->directory('products')
-                    ->visibility('public')
-                    ->imagePreviewHeight('120')
-                    ->nullable()
-                    ->formatStateUsing(function (?string $state, $record): ?string {
-                        // Trả về raw DB value (path) để FileUpload render preview đúng
-                        // getRawOriginal() tránh gọi qua accessor (accessor trả về full URL)
-                        return $record?->getRawOriginal('image_url');
-                    })
-                    ->columnSpan(2),
+                TextInput::make('image_url')
+                    ->label('URL ảnh')
+                    ->url()
+                    ->maxLength(2048)
+                    ->placeholder('https://example.com/image.jpg')
+                    ->columnSpanFull(),
 
                 RichEditor::make('description')
                     ->label('Mô tả')
