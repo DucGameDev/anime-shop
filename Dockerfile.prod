@@ -1,5 +1,30 @@
 # =============================================================================
-# Stage 1 — Node: build frontend assets (Vite + Tailwind)
+# Stage 1 — composer: install PHP dependencies (no dev, no scripts)
+# =============================================================================
+FROM composer:2 AS composer
+
+WORKDIR /app
+
+# Copy composer manifest first to cache this layer
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-autoloader \
+    --no-scripts \
+    --prefer-dist
+
+# Copy full source so dump-autoload can discover classes
+COPY . .
+
+RUN composer dump-autoload \
+    --optimize \
+    --no-dev
+
+# =============================================================================
+# Stage 2 — assets: build frontend (Vite + Tailwind)
+# vendor/livewire must exist before npm run build resolves the ESM import
 # =============================================================================
 FROM node:20-alpine AS assets
 
@@ -8,6 +33,10 @@ WORKDIR /app
 # Copy package files first to leverage layer cache
 COPY package.json package-lock.json ./
 RUN npm ci --frozen-lockfile
+
+# Provide only the Livewire ESM file that Vite needs to resolve the import:
+#   resources/js/app.js → ../../vendor/livewire/livewire/dist/livewire.esm
+COPY --from=composer /app/vendor/livewire/livewire/dist ./vendor/livewire/livewire/dist
 
 # Copy only what Vite needs to build
 COPY resources/ resources/
@@ -19,7 +48,7 @@ COPY postcss.config.js ./
 RUN npm run build
 
 # =============================================================================
-# Stage 2 — PHP-FPM: production application
+# Stage 3 — app: PHP-FPM production image
 # =============================================================================
 FROM php:8.2-fpm-alpine AS app
 
@@ -56,30 +85,16 @@ RUN docker-php-ext-configure gd \
         intl \
         opcache
 
-# Copy Composer binary from official image
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
 WORKDIR /var/www/html
-
-# Copy composer manifest first — install without autoload/scripts to cache this layer
-COPY composer.json composer.lock ./
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-autoloader \
-    --no-scripts \
-    --prefer-dist
 
 # Copy full application source code
 COPY . .
 
-# Copy compiled assets from Stage 1
-COPY --from=assets /app/public/build ./public/build
+# Reuse vendor/ built in stage 1 — no need to re-run composer
+COPY --from=composer /app/vendor ./vendor
 
-# Generate optimized autoloader and run post-install scripts (package:discover, filament:upgrade)
-RUN composer dump-autoload \
-    --optimize \
-    --no-dev
+# Copy compiled assets from stage 2
+COPY --from=assets /app/public/build ./public/build
 
 # Create required Laravel directories and set permissions
 RUN mkdir -p \
