@@ -7,7 +7,7 @@
 
     <title>{{ $title ?: config('app.name', 'AnimeShop') }}</title>
 
-    <link rel="icon" type="image/x-icon" href="/yona.ico">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     {{-- Open Graph / link preview --}}
     <meta property="og:type" content="website">
