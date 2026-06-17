@@ -4,7 +4,7 @@
     <section class="relative overflow-hidden">
         <img src="/banner.png"
              alt="AnimeShop — Thế giới anime dành cho bạn"
-             class="w-full block">
+             class="w-full block max-h-64 sm:max-h-80 lg:max-h-96 object-cover object-center">
 
         {{-- Text overlay — nằm trong vùng trắng bên trái (~38% ảnh) --}}
         <div class="absolute inset-0 flex items-center pl-6 sm:pl-10 lg:pl-16">
