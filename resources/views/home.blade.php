@@ -1,23 +1,13 @@
 <x-app-layout title="Trang chủ — AnimeShop">
 
     {{-- ===== BANNER ===== --}}
-    <section class="bg-primary-light py-8 lg:py-16">
-        <x-container>
-            <div class="flex flex-col items-center text-center gap-4 lg:gap-6">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary text-white">
-                    🎌 Hàng mới về mỗi tuần
-                </span>
-
-                <h1 class="text-2xl md:text-4xl font-bold text-primary-dark leading-tight max-w-2xl">
-                    Thiên đường đồ anime<br class="hidden md:block"> chính hãng tại Việt Nam
-                </h1>
-
-                <p class="text-sm md:text-base text-neutral-text max-w-lg">
-                    Figure, áo, manga, sticker — tất cả trong một shop. Giao hàng toàn quốc,
-                    đổi trả trong 7 ngày.
-                </p>
-
-                <div class="flex flex-wrap justify-center gap-3 mt-2">
+    <section>
+        <img src="/banner.png"
+             alt="AnimeShop — Thế giới anime dành cho bạn"
+             class="w-full block">
+        <div class="bg-primary-light py-4 lg:py-5">
+            <x-container>
+                <div class="flex flex-wrap justify-center gap-3">
                     <x-button variant="primary" size="base">
                         <a href="{{ route('products.index') }}" class="flex items-center gap-1.5">
                             Khám phá ngay
@@ -33,8 +23,8 @@
                         </a>
                     </x-button>
                 </div>
-            </div>
-        </x-container>
+            </x-container>
+        </div>
     </section>
 
     {{-- ===== SẢN PHẨM NỔI BẬT ===== --}}
