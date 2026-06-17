@@ -1,15 +1,16 @@
-<x-app-layout
-    :title="$product->name"
-    :description="\Illuminate\Support\Str::limit(strip_tags($product->description), 155)">
+@php
+    $productDesc = mb_substr(strip_tags($product->description ?? ''), 0, 155);
+@endphp
 
-    {{-- JSON-LD: Product --}}
-    @push('head')
+<x-app-layout :title="$product->name" :description="$productDesc">
+
+    {{-- JSON-LD: Product (đặt trong body — Google chấp nhận) --}}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "Product",
-        "name": "{{ $product->name }}",
-        "description": "{{ addslashes(strip_tags($product->description)) }}",
+        "name": "{{ e($product->name) }}",
+        "description": "{{ e(strip_tags($product->description)) }}",
         "image": "{{ $product->image_url }}",
         "url": "{{ url()->current() }}",
         "offers": {
@@ -24,12 +25,11 @@
             "itemListElement": [
                 { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "{{ route('home') }}" },
                 { "@type": "ListItem", "position": 2, "name": "Sản phẩm", "item": "{{ route('products.index') }}" },
-                { "@type": "ListItem", "position": 3, "name": "{{ $product->name }}", "item": "{{ url()->current() }}" }
+                { "@type": "ListItem", "position": 3, "name": "{{ e($product->name) }}", "item": "{{ url()->current() }}" }
             ]
         }
     }
     </script>
-    @endpush
 
     <x-container class="py-8 lg:py-12">
 
