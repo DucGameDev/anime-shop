@@ -52,7 +52,15 @@ php artisan view:cache
 echo "[entrypoint] Caching Filament components..."
 php artisan filament:cache-components 2>/dev/null || true
 
-echo "[entrypoint] Boot complete. Starting PHP-FPM..."
+# ---------------------------------------------------------------------------
+# Generate nginx config from template — Railway sets $PORT dynamically
+# envsubst '${PORT}' only substitutes PORT, leaving nginx vars ($uri etc) intact
+# ---------------------------------------------------------------------------
+PORT="${PORT:-8080}"
+echo "[entrypoint] Configuring nginx on port $PORT..."
+envsubst '${PORT}' < /etc/nginx/templates/default.conf.template > /etc/nginx/http.d/default.conf
 
-# Hand off to the main process (php-fpm) as PID 1
+echo "[entrypoint] Boot complete. Starting supervisord (nginx + php-fpm)..."
+
+# Hand off to supervisord as PID 1
 exec "$@"

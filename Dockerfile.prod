@@ -34,6 +34,9 @@ RUN apk add --no-cache \
     icu-dev \
     oniguruma-dev \
     linux-headers \
+    nginx \
+    gettext \
+    supervisor \
     $PHPIZE_DEPS
 
 # Configure and install PHP extensions
@@ -103,15 +106,23 @@ RUN { \
         echo "opcache.save_comments=1"; \
     } > /usr/local/etc/php/conf.d/opcache.ini
 
+# Remove default nginx site; template is generated at runtime by entrypoint
+RUN rm -f /etc/nginx/http.d/default.conf
+
+# Copy nginx template and supervisord config
+COPY docker/nginx/railway.conf.template /etc/nginx/templates/default.conf.template
+COPY docker/supervisord.conf /etc/supervisord.conf
+
 # Copy and enable production entrypoint
 COPY docker/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Health check: test PHP-FPM config validity — no DB connection needed
+# Health check: verify both php-fpm config and nginx config are valid
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD php-fpm -t 2>/dev/null && echo "healthy" || exit 1
+    CMD php-fpm -t 2>/dev/null && nginx -t 2>/dev/null || exit 1
 
-EXPOSE 9000
+# Railway assigns $PORT dynamically; 8080 is the conventional default
+EXPOSE 8080
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["php-fpm"]
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
