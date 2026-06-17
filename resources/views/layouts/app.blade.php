@@ -7,16 +7,16 @@
 
     @php
         $siteTitle   = config('app.name', 'AnimeShop');
-        $pageTitle   = $title ? "$title | $siteTitle" : $siteTitle;
+        $pageTitle   = ($title ?? '') ? ($title . ' | ' . $siteTitle) : $siteTitle;
         $defaultDesc = 'Thiên đường đồ anime chính hãng tại Việt Nam — figure, áo, manga, sticker. Giao hàng toàn quốc, đổi trả 7 ngày.';
-        $metaDesc    = $description ?: $defaultDesc;
+        $metaDesc    = ($description ?? '') ?: $defaultDesc;
         $canonical   = url()->current();
     @endphp
 
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $metaDesc }}">
     <link rel="canonical" href="{{ $canonical }}">
-    @if ($noindex)
+    @if (!empty($noindex))
     <meta name="robots" content="noindex,nofollow">
     @endif
 
