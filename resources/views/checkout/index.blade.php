@@ -1,4 +1,4 @@
-<x-app-layout title="Thanh toán — AnimeShop">
+<x-app-layout title="Thanh toán" :noindex="true">
 
     <x-container class="py-8 lg:py-12">
 

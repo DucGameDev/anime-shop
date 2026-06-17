@@ -1,4 +1,4 @@
-<x-app-layout title="Đặt hàng thành công — AnimeShop">
+<x-app-layout title="Đặt hàng thành công" :noindex="true">
 
     <x-container class="py-8 lg:py-16">
         <div class="mx-auto max-w-2xl">

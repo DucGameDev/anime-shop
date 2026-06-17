@@ -1,4 +1,35 @@
-<x-app-layout :title="$product->name . ' — AnimeShop'">
+<x-app-layout
+    :title="$product->name"
+    :description="\Illuminate\Support\Str::limit(strip_tags($product->description), 155)">
+
+    {{-- JSON-LD: Product --}}
+    @push('head')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "{{ $product->name }}",
+        "description": "{{ addslashes(strip_tags($product->description)) }}",
+        "image": "{{ $product->image_url }}",
+        "url": "{{ url()->current() }}",
+        "offers": {
+            "@type": "Offer",
+            "price": "{{ $product->price }}",
+            "priceCurrency": "VND",
+            "availability": "{{ $product->stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
+            "seller": { "@type": "Organization", "name": "{{ config('app.name') }}" }
+        },
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "{{ route('home') }}" },
+                { "@type": "ListItem", "position": 2, "name": "Sản phẩm", "item": "{{ route('products.index') }}" },
+                { "@type": "ListItem", "position": 3, "name": "{{ $product->name }}", "item": "{{ url()->current() }}" }
+            ]
+        }
+    }
+    </script>
+    @endpush
 
     <x-container class="py-8 lg:py-12">
 

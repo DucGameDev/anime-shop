@@ -1,4 +1,6 @@
-<x-app-layout title="Trang chủ — AnimeShop">
+<x-app-layout
+    title="Trang chủ"
+    description="Thiên đường đồ anime chính hãng tại Việt Nam — figure, áo, manga, sticker. Giao hàng toàn quốc, đổi trả 7 ngày. Đồng hành cùng mọi otaku!">
 
     {{-- ===== BANNER ===== --}}
     <section class="relative overflow-hidden">
