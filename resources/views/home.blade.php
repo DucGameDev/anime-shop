@@ -8,7 +8,7 @@
 
         {{-- Text overlay — nằm trong vùng trắng bên trái (~38% ảnh) --}}
         <div class="absolute inset-0 flex items-center pl-6 sm:pl-10 lg:pl-16">
-            <div class="w-[36%] sm:w-[32%] lg:w-[28%]">
+            <div class="w-[32%] sm:w-[30%] lg:w-[26%]">
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-primary text-white mb-2">
                     🎌 Hàng mới về mỗi tuần
                 </span>
