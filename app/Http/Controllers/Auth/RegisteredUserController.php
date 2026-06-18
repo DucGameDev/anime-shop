@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         // Honeypot
-        if ($request->input('website', '') !== '') {
+        if ($request->input('_hp', '') !== '') {
             Log::warning('Register honeypot triggered', ['ip' => $request->ip()]);
             return redirect()->route('register');
         }
