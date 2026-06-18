@@ -14,5 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, \Illuminate\Http\Request $request) {
+            if ($request->is('admin*') && auth()->check() && ! auth()->user()->isAdmin()) {
+                return redirect()->route('account.orders');
+            }
+        });
     })->create();
