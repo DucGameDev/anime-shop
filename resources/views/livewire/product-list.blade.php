@@ -99,7 +99,7 @@
         </p>
 
         @if ($products->hasPages())
-            <div class="mt-10">
+            <div class="mt-2">
                 {{ $products->onEachSide(1)->links('livewire-pagination') }}
             </div>
         @endif
