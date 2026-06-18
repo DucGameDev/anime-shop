@@ -1,22 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ProductList extends Component
 {
-    public string $search = '';
+    use WithPagination;
+
+    public string $search   = '';
     public string $category = '';
+    public int    $seed     = 0;
+
+    public function mount(): void
+    {
+        $this->seed = rand(1, 99999);
+    }
 
     public function setCategory(string $category): void
     {
         $this->category = $category;
-        $this->search = '';
+        $this->search   = '';
+        $this->resetPage();
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
 
     public function render(): View
@@ -26,8 +42,8 @@ class ProductList extends Component
             ->when($this->category, fn ($q) => $q->byCategory($this->category))
             ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->inStock()
-            ->latest()
-            ->get();
+            ->orderByRaw("RAND({$this->seed})")
+            ->paginate(12);
 
         return view('livewire.product-list', [
             'products'   => $products,

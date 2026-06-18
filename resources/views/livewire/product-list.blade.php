@@ -62,7 +62,7 @@
     </div>
 
     {{-- ===== PRODUCT GRID ===== --}}
-    @if ($products->isEmpty())
+    @if ($products->total() === 0)
         {{-- Empty state --}}
         <div class="flex flex-col items-center justify-center py-16 text-center">
             <svg class="h-20 w-20 text-neutral-muted/50 mb-4" xmlns="http://www.w3.org/2000/svg"
@@ -90,10 +90,18 @@
             @endforeach
         </div>
 
-        <p class="mt-6 text-sm text-neutral-muted text-center">
-            {{ $products->count() }} sản phẩm
-            @if ($category) trong danh mục <span class="font-medium text-neutral-text">{{ $categories->firstWhere('slug', $category)?->name ?? $category }}</span> @endif
-            @if ($search) khớp với "<span class="font-medium text-neutral-text">{{ $search }}</span>" @endif
-        </p>
+        {{-- Pagination + summary --}}
+        <div class="mt-8 flex flex-col items-center gap-3">
+            <p class="text-sm text-neutral-muted">
+                Hiển thị {{ $products->firstItem() }}–{{ $products->lastItem() }}
+                trong {{ $products->total() }} sản phẩm
+                @if ($category) · <span class="font-medium text-neutral-text">{{ $categories->firstWhere('slug', $category)?->name ?? $category }}</span> @endif
+                @if ($search) · khớp "<span class="font-medium text-neutral-text">{{ $search }}</span>" @endif
+            </p>
+
+            @if ($products->hasPages())
+                {{ $products->links() }}
+            @endif
+        </div>
     @endif
 </div>
