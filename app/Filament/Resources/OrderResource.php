@@ -156,6 +156,7 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('user'))
             ->columns([
                 TextColumn::make('id')
                     ->label('Mã đơn')
@@ -165,7 +166,11 @@ class OrderResource extends Resource
                 TextColumn::make('customer_name')
                     ->label('Khách hàng')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn (Order $record): string => $record->user !== null
+                        ? '🔵 Thành viên'
+                        : '⚪ Khách vãng lai'
+                    ),
 
                 TextColumn::make('phone')
                     ->label('Điện thoại')
