@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -32,6 +33,22 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Honeypot
+        if ($request->input('website', '') !== '') {
+            Log::warning('Register honeypot triggered', ['ip' => $request->ip()]);
+            return redirect()->route('register');
+        }
+
+        // Rate limit: 5 lần đăng ký / 10 phút theo IP
+        $key = 'register:' . $request->ip();
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw ValidationException::withMessages([
+                'email' => "Quá nhiều lần thử. Vui lòng thử lại sau {$seconds} giây.",
+            ]);
+        }
+        RateLimiter::hit($key, 600);
+
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
