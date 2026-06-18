@@ -66,7 +66,7 @@
                 </div>
 
                 @if ($products->hasPages())
-                    <div class="mt-8 flex justify-center">
+                    <div class="mt-10">
                         {{ $products->links() }}
                     </div>
                 @endif
