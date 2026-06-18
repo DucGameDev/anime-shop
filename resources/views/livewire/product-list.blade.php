@@ -91,17 +91,17 @@
         </div>
 
         {{-- Pagination + summary --}}
-        <div class="mt-8 flex flex-col items-center gap-3">
-            <p class="text-sm text-neutral-muted">
-                Hiển thị {{ $products->firstItem() }}–{{ $products->lastItem() }}
-                trong {{ $products->total() }} sản phẩm
-                @if ($category) · <span class="font-medium text-neutral-text">{{ $categories->firstWhere('slug', $category)?->name ?? $category }}</span> @endif
-                @if ($search) · khớp "<span class="font-medium text-neutral-text">{{ $search }}</span>" @endif
-            </p>
+        <p class="mt-6 text-sm text-neutral-muted text-center">
+            Hiển thị {{ $products->firstItem() }}–{{ $products->lastItem() }}
+            trong {{ $products->total() }} sản phẩm
+            @if ($category) · <span class="font-medium text-neutral-text">{{ $categories->firstWhere('slug', $category)?->name ?? $category }}</span> @endif
+            @if ($search) · khớp "<span class="font-medium text-neutral-text">{{ $search }}</span>" @endif
+        </p>
 
-            @if ($products->hasPages())
-                {{ $products->links() }}
-            @endif
-        </div>
+        @if ($products->hasPages())
+            <div class="mt-10">
+                {{ $products->onEachSide(1)->links() }}
+            </div>
+        @endif
     @endif
 </div>
