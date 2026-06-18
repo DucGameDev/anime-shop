@@ -42,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\FilamentInfoWidget::class,
                 \App\Filament\Widgets\StatsOverviewWidget::class,
                 \App\Filament\Widgets\RevenueChartWidget::class,
+                \App\Filament\Widgets\OrderStatusChartWidget::class,
                 \App\Filament\Widgets\LatestOrdersWidget::class,
             ])
             ->middleware([

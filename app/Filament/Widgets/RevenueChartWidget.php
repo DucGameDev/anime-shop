@@ -16,6 +16,8 @@ class RevenueChartWidget extends ChartWidget
 
     protected static ?int $sort = 2;
 
+    protected int | string | array $columnSpan = 1;
+
     protected function getData(): array
     {
         $days = collect(range(13, 0))->map(fn ($i) => Carbon::today()->subDays($i));

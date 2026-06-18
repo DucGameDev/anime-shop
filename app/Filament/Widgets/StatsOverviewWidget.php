@@ -102,6 +102,11 @@ class StatsOverviewWidget extends BaseWidget
                 ->description('Sản phẩm cần nhập thêm')
                 ->descriptionIcon('heroicon-m-archive-box-x-mark')
                 ->color('gray'),
+
+            Stat::make('Tổng sản phẩm', Product::count())
+                ->description('Đang bán trong cửa hàng')
+                ->descriptionIcon('heroicon-m-cube')
+                ->color('info'),
         ];
     }
 }
