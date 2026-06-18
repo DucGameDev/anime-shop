@@ -24,6 +24,7 @@
 
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
 </head>
 <body class="font-sans antialiased bg-neutral-bg text-neutral-text">
 
@@ -263,5 +264,6 @@
         <span x-text="message"></span>
     </div>
 
+    @stack('scripts')
 </body>
 </html>

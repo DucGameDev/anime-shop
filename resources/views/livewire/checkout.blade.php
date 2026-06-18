@@ -1,3 +1,9 @@
+@push('head')
+@if(config('services.recaptcha.site_key'))
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}" async defer></script>
+@endif
+@endpush
+
 <div>
     @if (empty($items))
         {{-- Giỏ trống --}}
@@ -73,9 +79,15 @@
                     </div>
 
                     {{-- Nút đặt hàng (mobile) --}}
-                    <div class="mt-6 lg:hidden">
+                    <div class="mt-6 lg:hidden" x-data>
                         <button
-                            wire:click="placeOrder"
+                            @click="
+                                @if(config('services.recaptcha.site_key'))
+                                const token = await new Promise(resolve => grecaptcha.ready(() => grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'checkout'}).then(resolve)));
+                                $wire.recaptchaToken = token;
+                                @endif
+                                $wire.placeOrder();
+                            "
                             wire:loading.attr="disabled"
                             class="w-full min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                         >
@@ -120,9 +132,15 @@
                     <p class="mt-1 text-xs text-neutral-muted">Chưa bao gồm phí vận chuyển</p>
 
                     {{-- Nút đặt hàng (desktop) --}}
-                    <div class="mt-5 hidden lg:block">
+                    <div class="mt-5 hidden lg:block" x-data>
                         <button
-                            wire:click="placeOrder"
+                            @click="
+                                @if(config('services.recaptcha.site_key'))
+                                const token = await new Promise(resolve => grecaptcha.ready(() => grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'checkout'}).then(resolve)));
+                                $wire.recaptchaToken = token;
+                                @endif
+                                $wire.placeOrder();
+                            "
                             wire:loading.attr="disabled"
                             class="w-full min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                         >

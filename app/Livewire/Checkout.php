@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Actions\PlaceOrderAction;
 use App\Models\Order;
 use App\Services\CartService;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
@@ -18,8 +19,9 @@ class Checkout extends Component
     public string $email = '';
     public string $phone = '';
     public string $address = '';
-    public string $website  = '';  // honeypot
-    public int    $loadedAt = 0;   // timestamp khi component mount
+    public string $website        = '';  // honeypot
+    public int    $loadedAt       = 0;   // timestamp khi component mount
+    public string $recaptchaToken = '';  // reCAPTCHA v3 token
 
     protected array $rules = [
         'customerName' => 'required|string|max:255',
@@ -55,6 +57,23 @@ class Checkout extends Component
             Log::warning('Checkout too fast', ['ip' => request()->ip()]);
             $this->addError('customerName', 'Vui lòng kiểm tra lại thông tin trước khi đặt hàng.');
             return null;
+        }
+
+        // reCAPTCHA v3 — bỏ qua khi chưa cấu hình (local dev)
+        $siteKey = config('services.recaptcha.site_key');
+        if ($siteKey !== '') {
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret'   => config('services.recaptcha.secret_key'),
+                'response' => $this->recaptchaToken,
+                'remoteip' => request()->ip(),
+            ]);
+
+            $score = $response->json('score', 0);
+            if (! $response->json('success') || $score < config('services.recaptcha.threshold')) {
+                Log::warning('reCAPTCHA failed', ['score' => $score, 'ip' => request()->ip()]);
+                $this->addError('customerName', 'Xác minh bảo mật thất bại. Vui lòng thử lại.');
+                return null;
+            }
         }
 
         $cartService = app(CartService::class);
