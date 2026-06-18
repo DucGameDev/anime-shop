@@ -46,6 +46,8 @@ class Checkout extends Component
             $user = auth()->user();
             $this->customerName = $user->name;
             $this->email        = $user->email;
+            $this->phone        = $user->phone ?? '';
+            $this->address      = $user->address ?? '';
             $this->isLoggedIn   = true;
         }
     }
@@ -117,6 +119,14 @@ class Checkout extends Component
                 'phone'          => $this->phone,
                 'address'        => $this->address,
             ]);
+
+            // Lưu phone/address vào profile để tự điền lần sau
+            if (auth()->check()) {
+                auth()->user()->update([
+                    'phone'   => $this->phone,
+                    'address' => $this->address,
+                ]);
+            }
 
             return redirect()->route('orders.show', $order);
         } catch (\Exception $e) {
