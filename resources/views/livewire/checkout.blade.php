@@ -50,12 +50,6 @@
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            @if($isLoggedIn)
-                                <p class="mt-1 text-xs text-neutral-muted">
-                                    Đang đăng nhập với tài khoản này.
-                                    <a href="{{ route('login') }}" class="text-primary hover:underline">Đăng xuất</a>
-                                </p>
-                            @endif
                         </div>
 
                         {{-- Số điện thoại --}}
