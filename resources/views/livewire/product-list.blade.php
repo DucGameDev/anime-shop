@@ -100,7 +100,7 @@
 
         @if ($products->hasPages())
             <div class="mt-10">
-                {{ $products->onEachSide(1)->links() }}
+                {{ $products->onEachSide(1)->links('livewire-pagination') }}
             </div>
         @endif
     @endif
