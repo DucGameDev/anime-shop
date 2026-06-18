@@ -26,7 +26,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="font-sans antialiased bg-neutral-bg text-neutral-text">
+<body class="font-sans antialiased bg-neutral-bg text-neutral-text text-[17px]">
 
     {{-- ===== HEADER ===== --}}
     <header class="bg-white shadow-sm sticky top-0 z-50" x-data="{ open: false }">
@@ -35,7 +35,7 @@
 
                 {{-- Logo --}}
                 <a href="{{ route('home') }}" class="flex-shrink-0">
-                    <span class="text-xl font-bold text-primary-dark tracking-tight">
+                    <span class="text-2xl font-bold text-primary-dark tracking-tight">
                         Anime<span class="text-primary">Shop</span>
                     </span>
                 </a>
@@ -43,11 +43,11 @@
                 {{-- Nav — desktop (hidden on mobile) --}}
                 <nav class="hidden lg:flex items-center gap-8">
                     <a href="{{ route('home') }}"
-                       class="text-base font-medium text-neutral-text hover:text-primary transition-colors">
+                       class="text-lg font-medium text-neutral-text hover:text-primary transition-colors">
                         Trang chủ
                     </a>
                     <a href="{{ route('products.index') }}"
-                       class="text-base font-medium text-neutral-text hover:text-primary transition-colors">
+                       class="text-lg font-medium text-neutral-text hover:text-primary transition-colors">
                         Sản phẩm
                     </a>
                 </nav>
@@ -59,7 +59,7 @@
                     @auth
                         <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                             <button @click="open = !open"
-                                    class="flex items-center gap-1.5 text-sm font-medium text-neutral-text hover:text-primary transition-colors">
+                                    class="flex items-center gap-1.5 text-base font-medium text-neutral-text hover:text-primary transition-colors">
                                 <span class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-light text-primary font-semibold text-sm">
                                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                 </span>
@@ -81,7 +81,7 @@
                                     <p class="text-xs text-neutral-muted truncate">{{ auth()->user()->email }}</p>
                                 </div>
                                 <a href="{{ route('account.orders') }}"
-                                   class="flex items-center gap-2 px-4 py-2 text-sm text-neutral-text hover:bg-primary-light hover:text-primary transition-colors">
+                                   class="flex items-center gap-2 px-4 py-2 text-base text-neutral-text hover:bg-primary-light hover:text-primary transition-colors">
                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
                                     </svg>
@@ -90,7 +90,7 @@
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"
-                                            class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                            class="flex w-full items-center gap-2 px-4 py-2 text-base text-red-600 hover:bg-red-50 transition-colors">
                                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
                                         </svg>
@@ -101,7 +101,7 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}"
-                           class="hidden lg:inline-flex text-sm font-medium text-neutral-text hover:text-primary transition-colors">
+                           class="hidden lg:inline-flex text-base font-medium text-neutral-text hover:text-primary transition-colors">
                             Đăng nhập
                         </a>
                     @endauth
