@@ -51,8 +51,59 @@
                     </a>
                 </nav>
 
-                {{-- Right side: cart icon + hamburger --}}
+                {{-- Right side: account + cart icon + hamburger --}}
                 <div class="flex items-center gap-3">
+
+                    {{-- Account --}}
+                    @auth
+                        <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                            <button @click="open = !open"
+                                    class="flex items-center gap-1.5 text-sm font-medium text-neutral-text hover:text-primary transition-colors">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-light text-primary font-semibold text-sm">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </span>
+                                <svg class="h-3.5 w-3.5 text-neutral-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+                                </svg>
+                            </button>
+                            <div x-show="open"
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="absolute right-0 top-10 z-50 w-48 rounded-xl bg-white py-1 shadow-lg ring-1 ring-black/5"
+                                 style="display:none">
+                                <div class="border-b border-gray-100 px-4 py-2">
+                                    <p class="text-xs font-semibold text-neutral-text truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-neutral-muted truncate">{{ auth()->user()->email }}</p>
+                                </div>
+                                <a href="{{ route('account.orders') }}"
+                                   class="flex items-center gap-2 px-4 py-2 text-sm text-neutral-text hover:bg-primary-light hover:text-primary transition-colors">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+                                    </svg>
+                                    Đơn hàng của tôi
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                            class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
+                                        </svg>
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}"
+                           class="hidden lg:inline-flex text-sm font-medium text-neutral-text hover:text-primary transition-colors">
+                            Đăng nhập
+                        </a>
+                    @endauth
 
                     {{-- Cart icon — Livewire component tự cập nhật badge --}}
                     <livewire:cart-icon />
@@ -92,6 +143,23 @@
                    class="block px-3 py-2.5 rounded-lg text-base font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
                     Sản phẩm
                 </a>
+                @auth
+                    <a href="{{ route('account.orders') }}"
+                       class="block px-3 py-2.5 rounded-lg text-base font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
+                        Đơn hàng của tôi
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full text-left block px-3 py-2.5 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors">
+                            Đăng xuất
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                       class="block px-3 py-2.5 rounded-lg text-base font-medium text-primary hover:bg-primary-light transition-colors">
+                        Đăng nhập
+                    </a>
+                @endauth
             </div>
         </x-container>
     </header>
