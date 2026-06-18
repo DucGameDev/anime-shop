@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\OrderResource;
 use App\Models\Order;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -9,7 +12,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class LatestOrdersWidget extends BaseWidget
 {
-    protected static ?string $heading = '5 đơn hàng mới nhất';
+    protected static ?string $heading = 'Đơn hàng mới nhất';
 
     protected static ?int $sort = 3;
 
@@ -18,20 +21,24 @@ class LatestOrdersWidget extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(
-                Order::query()->latest()->limit(5)
-            )
+            ->query(Order::query()->with('user')->latest()->limit(10))
             ->columns([
                 TextColumn::make('id')
                     ->label('Mã đơn')
-                    ->formatStateUsing(fn ($state) => '#' . str_pad((string) $state, 6, '0', STR_PAD_LEFT)),
+                    ->formatStateUsing(fn ($state) => '#' . str_pad((string) $state, 6, '0', STR_PAD_LEFT))
+                    ->weight('bold'),
 
                 TextColumn::make('customer_name')
-                    ->label('Khách hàng'),
+                    ->label('Khách hàng')
+                    ->description(fn (Order $record): string => $record->user !== null
+                        ? '🔵 ' . $record->customer_email
+                        : '⚪ Khách vãng lai'
+                    ),
 
                 TextColumn::make('total_amount')
                     ->label('Tổng tiền')
-                    ->formatStateUsing(fn ($state) => number_format((float) $state, 0, ',', '.') . '₫'),
+                    ->formatStateUsing(fn ($state) => number_format((float) $state, 0, ',', '.') . '₫')
+                    ->weight('medium'),
 
                 TextColumn::make('status')
                     ->label('Trạng thái')
@@ -52,9 +59,11 @@ class LatestOrdersWidget extends BaseWidget
                     }),
 
                 TextColumn::make('created_at')
-                    ->label('Ngày đặt')
-                    ->dateTime('d/m/Y H:i'),
+                    ->label('Thời gian')
+                    ->dateTime('H:i d/m/Y')
+                    ->sortable(),
             ])
+            ->recordUrl(fn (Order $record): string => OrderResource::getUrl('edit', ['record' => $record]))
             ->paginated(false);
     }
 }
