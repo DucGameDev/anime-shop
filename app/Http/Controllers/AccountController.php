@@ -12,7 +12,7 @@ class AccountController extends Controller
     {
         $orders = auth()->user()
             ->orders()
-            ->with('items')
+            ->with(['items.product' => fn ($q) => $q->withTrashed()])
             ->latest()
             ->paginate(10);
 
