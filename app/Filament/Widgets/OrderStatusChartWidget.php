@@ -15,6 +15,8 @@ class OrderStatusChartWidget extends ChartWidget
 
     protected int | string | array $columnSpan = 1;
 
+    protected static ?string $maxHeight = '280px';
+
     protected function getData(): array
     {
         $statuses = [

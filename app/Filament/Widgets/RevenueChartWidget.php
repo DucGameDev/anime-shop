@@ -18,6 +18,8 @@ class RevenueChartWidget extends ChartWidget
 
     protected int | string | array $columnSpan = 1;
 
+    protected static ?string $maxHeight = '280px';
+
     protected function getData(): array
     {
         $days = collect(range(13, 0))->map(fn ($i) => Carbon::today()->subDays($i));
