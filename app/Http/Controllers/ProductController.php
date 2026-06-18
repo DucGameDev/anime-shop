@@ -9,6 +9,12 @@ class ProductController extends Controller
 {
     public function show(Product $product): View
     {
-        return view('products.show', compact('product'));
+        $suggestions = Product::inStock()
+            ->where('id', '!=', $product->id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        return view('products.show', compact('product', 'suggestions'));
     }
 }

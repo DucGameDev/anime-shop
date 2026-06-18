@@ -148,4 +148,18 @@
 
     </x-container>
 
+    {{-- ===== GỢI Ý SẢN PHẨM ===== --}}
+    @if ($suggestions->isNotEmpty())
+        <div class="border-t border-gray-200 bg-white">
+            <x-container class="py-10 lg:py-14">
+                <h2 class="mb-6 text-xl font-bold text-neutral-text">Có thể bạn cũng thích</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+                    @foreach ($suggestions as $suggested)
+                        <x-product-card :product="$suggested" />
+                    @endforeach
+                </div>
+            </x-container>
+        </div>
+    @endif
+
 </x-app-layout>
