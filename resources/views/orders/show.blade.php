@@ -35,6 +35,42 @@
 
                 <div class="my-6 border-t border-dashed border-gray-200"></div>
 
+                {{-- QR Thanh toán --}}
+                @php
+                    $bankId      = config('payment.bank_id');
+                    $accountNo   = config('payment.account_no');
+                    $accountName = config('payment.account_name');
+                    $amount      = (int) $order->total_amount;
+                    $orderRef    = 'DH' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT);
+                    $qrUrl       = "https://img.vietqr.io/image/{$bankId}-{$accountNo}-compact2.png"
+                                 . "?amount={$amount}"
+                                 . "&addInfo=" . urlencode($orderRef)
+                                 . "&accountName=" . urlencode($accountName);
+                @endphp
+
+                <div class="text-center">
+                    <h2 class="mb-1 text-sm font-semibold text-neutral-text">Thanh toán chuyển khoản</h2>
+                    <p class="mb-4 text-xs text-neutral-muted">Quét mã QR bằng app ngân hàng để thanh toán</p>
+
+                    <div class="inline-block rounded-2xl border-2 border-primary-light p-3 shadow-sm">
+                        <img src="{{ $qrUrl }}" alt="QR thanh toán" class="h-52 w-52 rounded-xl">
+                    </div>
+
+                    <div class="mt-4 space-y-1 text-sm">
+                        <p><span class="text-neutral-muted">Ngân hàng:</span> <span class="font-semibold text-neutral-text">Vietcombank (VCB)</span></p>
+                        <p><span class="text-neutral-muted">Số tài khoản:</span> <span class="font-semibold text-neutral-text font-mono">{{ $accountNo }}</span></p>
+                        <p><span class="text-neutral-muted">Chủ tài khoản:</span> <span class="font-semibold text-neutral-text">{{ $accountName }}</span></p>
+                        <p><span class="text-neutral-muted">Số tiền:</span> <span class="font-bold text-primary-dark">{{ number_format($amount, 0, ',', '.') }}₫</span></p>
+                        <p><span class="text-neutral-muted">Nội dung CK:</span> <span class="font-semibold text-neutral-text font-mono">{{ $orderRef }}</span></p>
+                    </div>
+
+                    <p class="mt-3 text-xs text-neutral-muted">
+                        Đơn hàng sẽ được xác nhận sau khi chúng tôi nhận được thanh toán.
+                    </p>
+                </div>
+
+                <div class="my-6 border-t border-dashed border-gray-200"></div>
+
                 {{-- Chi tiết đơn hàng --}}
                 <div>
                     <h2 class="mb-3 text-sm font-semibold text-neutral-text">Chi tiết đơn hàng</h2>
@@ -74,42 +110,6 @@
                     <p>
                         <span class="font-medium text-neutral-text">Địa chỉ:</span>
                         <span class="text-neutral-muted"> {{ $order->address }}</span>
-                    </p>
-                </div>
-
-                <div class="my-6 border-t border-dashed border-gray-200"></div>
-
-                {{-- QR Thanh toán --}}
-                @php
-                    $bankId      = config('payment.bank_id');
-                    $accountNo   = config('payment.account_no');
-                    $accountName = config('payment.account_name');
-                    $amount      = (int) $order->total_amount;
-                    $orderRef    = 'DH' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT);
-                    $qrUrl       = "https://img.vietqr.io/image/{$bankId}-{$accountNo}-compact2.png"
-                                 . "?amount={$amount}"
-                                 . "&addInfo=" . urlencode($orderRef)
-                                 . "&accountName=" . urlencode($accountName);
-                @endphp
-
-                <div class="text-center">
-                    <h2 class="mb-1 text-sm font-semibold text-neutral-text">Thanh toán chuyển khoản</h2>
-                    <p class="mb-4 text-xs text-neutral-muted">Quét mã QR bằng app ngân hàng để thanh toán</p>
-
-                    <div class="inline-block rounded-2xl border-2 border-primary-light p-3 shadow-sm">
-                        <img src="{{ $qrUrl }}" alt="QR thanh toán" class="h-52 w-52 rounded-xl">
-                    </div>
-
-                    <div class="mt-4 space-y-1 text-sm">
-                        <p><span class="text-neutral-muted">Ngân hàng:</span> <span class="font-semibold text-neutral-text">Vietcombank (VCB)</span></p>
-                        <p><span class="text-neutral-muted">Số tài khoản:</span> <span class="font-semibold text-neutral-text font-mono">{{ $accountNo }}</span></p>
-                        <p><span class="text-neutral-muted">Chủ tài khoản:</span> <span class="font-semibold text-neutral-text">{{ $accountName }}</span></p>
-                        <p><span class="text-neutral-muted">Số tiền:</span> <span class="font-bold text-primary-dark">{{ number_format($amount, 0, ',', '.') }}₫</span></p>
-                        <p><span class="text-neutral-muted">Nội dung:</span> <span class="font-semibold text-neutral-text font-mono">{{ $orderRef }}</span></p>
-                    </div>
-
-                    <p class="mt-3 text-xs text-neutral-muted">
-                        Đơn hàng sẽ được xác nhận sau khi chúng tôi nhận được thanh toán.
                     </p>
                 </div>
 
