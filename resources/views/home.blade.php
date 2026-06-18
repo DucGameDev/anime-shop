@@ -67,7 +67,7 @@
 
                 @if ($products->hasPages())
                     <div class="mt-10">
-                        {{ $products->links() }}
+                        {{ $products->onEachSide(1)->links() }}
                     </div>
                 @endif
             @endif
