@@ -66,6 +66,12 @@ echo "[entrypoint] Creating storage link..."
 php artisan storage:link --force 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
+# Ensure writable directories for Livewire uploads and Excel imports
+# ---------------------------------------------------------------------------
+mkdir -p storage/app/livewire-tmp storage/app/imports
+chmod -R 775 storage/app/livewire-tmp storage/app/imports
+
+# ---------------------------------------------------------------------------
 # Cache config / routes / views for maximum performance.
 # Must run AFTER APP_KEY and DB are confirmed available.
 # ---------------------------------------------------------------------------
