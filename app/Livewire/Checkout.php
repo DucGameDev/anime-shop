@@ -19,7 +19,6 @@ class Checkout extends Component
     public string $phone = '';
     public string $address = '';
     public string $website        = '';  // honeypot
-    public int    $loadedAt       = 0;   // timestamp khi component mount
     public string $recaptchaToken = '';  // reCAPTCHA v3 token
     public bool   $isLoggedIn     = false;
 
@@ -39,8 +38,6 @@ class Checkout extends Component
 
     public function mount(): void
     {
-        $this->loadedAt = time();
-
         if (auth()->check()) {
             $user = auth()->user();
             $this->customerName = $user->name;
@@ -59,13 +56,6 @@ class Checkout extends Component
         if ($this->website !== '') {
             Log::warning('Honeypot triggered', ['ip' => request()->ip()]);
             return redirect()->route('orders.show', 0); // silent fail
-        }
-
-        // Minimum time — submit dưới 4 giây kể từ khi load
-        if (time() - $this->loadedAt < 4) {
-            Log::warning('Checkout too fast', ['ip' => request()->ip()]);
-            $this->addError('customerName', 'Vui lòng kiểm tra lại thông tin trước khi đặt hàng.');
-            return null;
         }
 
         // reCAPTCHA v3 — bỏ qua khi chưa cấu hình (local dev)
