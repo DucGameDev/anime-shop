@@ -1,3 +1,9 @@
+@push('head')
+@if(config('services.recaptcha.site_key'))
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}" async defer></script>
+@endif
+@endpush
+
 <x-app-layout title="Đăng ký — AnimeShop">
     <x-container class="py-12">
         <div class="mx-auto max-w-md">
@@ -5,8 +11,20 @@
 
                 <h1 class="mb-6 text-center text-2xl font-bold text-neutral-text">Tạo tài khoản</h1>
 
-                <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                <form method="POST" action="{{ route('register') }}" class="space-y-4"
+                    @if(config('services.recaptcha.site_key'))
+                    x-data
+                    @submit.prevent="
+                        const token = await new Promise(resolve => grecaptcha.ready(() => grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(resolve)));
+                        $el.querySelector('[name=recaptcha_token]').value = token;
+                        $el.submit();
+                    "
+                    @endif
+                >
                     @csrf
+                    @if(config('services.recaptcha.site_key'))
+                    <input type="hidden" name="recaptcha_token" value="">
+                    @endif
 
                     <div>
                         <label for="name" class="block text-sm font-medium text-neutral-text mb-1">Họ tên</label>
