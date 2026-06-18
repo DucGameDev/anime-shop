@@ -3,11 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
+use App\Filament\Resources\OrderResource\RelationManagers\OrderItemsRelationManager;
 use App\Models\Order;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Illuminate\Support\HtmlString;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -52,14 +56,93 @@ class OrderResource extends Resource
                     ->disabled()
                     ->formatStateUsing(fn (mixed $state): string => number_format((float) $state, 0, ',', '.') . '₫'),
 
-                Select::make('status')
-                    ->label('Trạng thái')
+                TextInput::make('created_at')
+                    ->label('Thời gian đặt')
+                    ->disabled()
+                    ->formatStateUsing(fn (mixed $state): string => \Carbon\Carbon::parse($state)->format('H:i d/m/Y')),
+
+                Placeholder::make('status_progress')
+                    ->label('Tiến trình đơn hàng')
+                    ->columnSpanFull()
+                    ->content(function (Get $get): HtmlString {
+                        $status = $get('status') ?? 'pending';
+                        $isCancelled = $status === 'cancelled';
+
+                        $steps = [
+                            ['key' => 'pending',   'label' => 'Chờ xử lý', 'icon' => '🕐'],
+                            ['key' => 'shipped',   'label' => 'Đang giao',  'icon' => '🚚'],
+                            ['key' => 'completed', 'label' => 'Hoàn thành', 'icon' => '✅'],
+                        ];
+
+                        $order = ['pending' => 0, 'shipped' => 1, 'completed' => 2];
+                        $currentIdx = $order[$status] ?? 0;
+
+                        $activeColor = match ($status) {
+                            'shipped'   => '#3b82f6',
+                            'completed' => '#10b981',
+                            default     => '#f59e0b',
+                        };
+
+                        if ($isCancelled) {
+                            return new HtmlString(
+                                '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.875rem 1.25rem;background:#fef2f2;border:1px solid #fecaca;border-radius:0.75rem;">'
+                                . '<span style="font-size:1.5rem;">❌</span>'
+                                . '<div style="font-weight:600;color:#dc2626;font-size:0.9375rem;">Đơn hàng đã bị hủy</div>'
+                                . '</div>'
+                            );
+                        }
+
+                        $html = '<div style="display:flex;align-items:flex-start;width:100%;padding:0.5rem 0;">';
+
+                        foreach ($steps as $i => $step) {
+                            $isDone    = $i < $currentIdx;
+                            $isCurrent = $i === $currentIdx;
+
+                            $bg    = ($isDone || $isCurrent) ? $activeColor : '#e5e7eb';
+                            $color = ($isDone || $isCurrent) ? '#ffffff' : '#9ca3af';
+                            $labelColor = $isCurrent ? $activeColor : ($isDone ? '#374151' : '#9ca3af');
+                            $weight = $isCurrent ? '700' : '400';
+                            $icon = $isDone ? '✓' : $step['icon'];
+
+                            $html .= '<div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">'
+                                . '<div style="width:2.75rem;height:2.75rem;border-radius:50%;background:' . $bg . ';display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:' . $color . ';box-shadow:' . ($isCurrent ? '0 0 0 4px ' . $activeColor . '33' : 'none') . ';">' . $icon . '</div>'
+                                . '<span style="font-size:0.75rem;margin-top:0.4rem;font-weight:' . $weight . ';color:' . $labelColor . ';white-space:nowrap;">' . $step['label'] . '</span>'
+                                . '</div>';
+
+                            if ($i < count($steps) - 1) {
+                                $lineColor = $i < $currentIdx ? $activeColor : '#e5e7eb';
+                                $html .= '<div style="flex:1;height:3px;background:' . $lineColor . ';margin:1.375rem 0.375rem 0;border-radius:2px;"></div>';
+                            }
+                        }
+
+                        $html .= '</div>';
+
+                        return new HtmlString($html);
+                    }),
+
+                ToggleButtons::make('status')
+                    ->label('Đổi trạng thái')
                     ->required()
+                    ->inline()
+                    ->live()
+                    ->columnSpanFull()
                     ->options([
                         'pending'   => 'Chờ xử lý',
                         'shipped'   => 'Đang giao',
                         'completed' => 'Hoàn thành',
                         'cancelled' => 'Đã hủy',
+                    ])
+                    ->colors([
+                        'pending'   => 'warning',
+                        'shipped'   => 'info',
+                        'completed' => 'success',
+                        'cancelled' => 'danger',
+                    ])
+                    ->icons([
+                        'pending'   => 'heroicon-o-clock',
+                        'shipped'   => 'heroicon-o-truck',
+                        'completed' => 'heroicon-o-check-circle',
+                        'cancelled' => 'heroicon-o-x-circle',
                     ]),
 
                 Textarea::make('address')
@@ -138,7 +221,9 @@ class OrderResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            OrderItemsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
