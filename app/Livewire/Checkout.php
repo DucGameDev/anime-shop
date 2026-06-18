@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Actions\PlaceOrderAction;
-use App\Models\Order;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -78,18 +77,6 @@ class Checkout extends Component
         $cartService = app(CartService::class);
         if ($cartService->getItemCount() === 0) {
             return redirect()->route('cart.index');
-        }
-
-        // Duplicate detection — cùng email đặt đơn trong vòng 10 phút
-        $recentOrder = Order::where('customer_email', $this->email)
-            ->where('created_at', '>=', now()->subMinutes(10))
-            ->latest()
-            ->first();
-
-        if ($recentOrder) {
-            $waitMinutes = (int) ceil(10 - $recentOrder->created_at->diffInMinutes(now()));
-            $this->addError('email', "Bạn vừa đặt đơn hàng #{$recentOrder->id} gần đây. Vui lòng đợi thêm {$waitMinutes} phút hoặc liên hệ nếu cần hỗ trợ.");
-            return null;
         }
 
         try {
