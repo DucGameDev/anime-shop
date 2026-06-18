@@ -184,19 +184,6 @@
                     </p>
                 </div>
 
-                {{-- Navigation --}}
-                <div>
-                    <h3 class="text-sm font-semibold text-neutral-text uppercase tracking-wide mb-3">
-                        Mua sắm
-                    </h3>
-                    <ul class="space-y-2 text-sm text-neutral-muted">
-                        <li><a href="{{ route('products.index') }}?category=figure" class="hover:text-primary transition-colors">Figure</a></li>
-                        <li><a href="{{ route('products.index') }}?category=ao" class="hover:text-primary transition-colors">Áo</a></li>
-                        <li><a href="{{ route('products.index') }}?category=manga" class="hover:text-primary transition-colors">Manga</a></li>
-                        <li><a href="{{ route('products.index') }}?category=sticker" class="hover:text-primary transition-colors">Sticker</a></li>
-                    </ul>
-                </div>
-
                 {{-- Liên hệ --}}
                 <div>
                     <h3 class="text-sm font-semibold text-neutral-text uppercase tracking-wide mb-3">
@@ -221,6 +208,26 @@
                         </li>
                     </ul>
                 </div>
+
+                {{-- Google Maps --}}
+                <div>
+                    <h3 class="text-sm font-semibold text-neutral-text uppercase tracking-wide mb-3">
+                        Tìm chúng tôi
+                    </h3>
+                    <div class="overflow-hidden rounded-lg">
+                        <iframe
+                            src="https://maps.google.com/maps?q=Akihabara+Electric+Town,+Tokyo,+Japan&z=15&output=embed"
+                            width="100%"
+                            height="160"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Akihabara Electric Town"
+                        ></iframe>
+                    </div>
+                </div>
+
             </div>
 
             <div class="border-t border-gray-200 py-5 text-center text-xs text-neutral-muted">
