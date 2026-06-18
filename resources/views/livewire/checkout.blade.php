@@ -33,8 +33,11 @@
                             <label class="mb-1 block text-sm font-medium text-neutral-text">
                                 Họ và tên <span class="text-red-500">*</span>
                             </label>
-                            <x-input wire:model="customerName" type="text" placeholder="Nguyễn Văn A"
-                                @if($isLoggedIn) readonly class="bg-gray-50 cursor-default" @endif />
+                            @if($isLoggedIn)
+                                <p class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-neutral-text">{{ $customerName }}</p>
+                            @else
+                                <x-input wire:model="customerName" type="text" placeholder="Nguyễn Văn A" />
+                            @endif
                             @error('customerName')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -45,8 +48,11 @@
                             <label class="mb-1 block text-sm font-medium text-neutral-text">
                                 Email <span class="text-red-500">*</span>
                             </label>
-                            <x-input wire:model="email" type="email" placeholder="example@email.com"
-                                @if($isLoggedIn) readonly class="bg-gray-50 cursor-default" @endif />
+                            @if($isLoggedIn)
+                                <p class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-neutral-text">{{ $email }}</p>
+                            @else
+                                <x-input wire:model="email" type="email" placeholder="example@email.com" />
+                            @endif
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
