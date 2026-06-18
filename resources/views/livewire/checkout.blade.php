@@ -17,6 +17,11 @@
 
                     <div class="space-y-4">
 
+                        {{-- Honeypot: ẩn với CSS, bot sẽ điền vào --}}
+                        <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;" aria-hidden="true" tabindex="-1">
+                            <input wire:model="website" type="text" name="website" autocomplete="off" tabindex="-1" />
+                        </div>
+
                         {{-- Họ và tên --}}
                         <div>
                             <label class="mb-1 block text-sm font-medium text-neutral-text">

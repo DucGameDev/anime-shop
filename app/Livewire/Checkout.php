@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Actions\PlaceOrderAction;
+use App\Models\Order;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -17,6 +18,8 @@ class Checkout extends Component
     public string $email = '';
     public string $phone = '';
     public string $address = '';
+    public string $website  = '';  // honeypot
+    public int    $loadedAt = 0;   // timestamp khi component mount
 
     protected array $rules = [
         'customerName' => 'required|string|max:255',
@@ -32,15 +35,34 @@ class Checkout extends Component
         'address'      => 'Địa chỉ',
     ];
 
+    public function mount(): void
+    {
+        $this->loadedAt = time();
+    }
+
     public function placeOrder(PlaceOrderAction $action): mixed
     {
         $this->validate();
+
+        // Honeypot — bot điền vào field ẩn
+        if ($this->website !== '') {
+            Log::warning('Honeypot triggered', ['ip' => request()->ip()]);
+            return redirect()->route('orders.show', 0); // silent fail
+        }
+
+        // Minimum time — submit dưới 4 giây kể từ khi load
+        if (time() - $this->loadedAt < 4) {
+            Log::warning('Checkout too fast', ['ip' => request()->ip()]);
+            $this->addError('customerName', 'Vui lòng kiểm tra lại thông tin trước khi đặt hàng.');
+            return null;
+        }
 
         $cartService = app(CartService::class);
         if ($cartService->getItemCount() === 0) {
             return redirect()->route('cart.index');
         }
 
+        // Rate limit — tối đa 3 lần / 5 phút
         $key = 'checkout:' . md5($this->email . '|' . request()->ip());
         if (RateLimiter::tooManyAttempts($key, 3)) {
             $seconds = RateLimiter::availableIn($key);
@@ -48,6 +70,18 @@ class Checkout extends Component
             return null;
         }
         RateLimiter::hit($key, 300);
+
+        // Duplicate detection — cùng email đặt đơn trong vòng 10 phút
+        $recentOrder = Order::where('customer_email', $this->email)
+            ->where('created_at', '>=', now()->subMinutes(10))
+            ->latest()
+            ->first();
+
+        if ($recentOrder) {
+            $waitMinutes = (int) ceil(10 - $recentOrder->created_at->diffInMinutes(now()));
+            $this->addError('email', "Bạn vừa đặt đơn hàng #{$recentOrder->id} gần đây. Vui lòng đợi thêm {$waitMinutes} phút hoặc liên hệ nếu cần hỗ trợ.");
+            return null;
+        }
 
         try {
             $order = $action->execute([
