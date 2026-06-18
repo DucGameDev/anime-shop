@@ -33,7 +33,8 @@
                             <label class="mb-1 block text-sm font-medium text-neutral-text">
                                 Họ và tên <span class="text-red-500">*</span>
                             </label>
-                            <x-input wire:model="customerName" type="text" placeholder="Nguyễn Văn A" />
+                            <x-input wire:model="customerName" type="text" placeholder="Nguyễn Văn A"
+                                @if($isLoggedIn) readonly class="bg-gray-50 cursor-default" @endif />
                             @error('customerName')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -44,10 +45,17 @@
                             <label class="mb-1 block text-sm font-medium text-neutral-text">
                                 Email <span class="text-red-500">*</span>
                             </label>
-                            <x-input wire:model="email" type="email" placeholder="example@email.com" />
+                            <x-input wire:model="email" type="email" placeholder="example@email.com"
+                                @if($isLoggedIn) readonly class="bg-gray-50 cursor-default" @endif />
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                            @if($isLoggedIn)
+                                <p class="mt-1 text-xs text-neutral-muted">
+                                    Đang đăng nhập với tài khoản này.
+                                    <a href="{{ route('login') }}" class="text-primary hover:underline">Đăng xuất</a>
+                                </p>
+                            @endif
                         </div>
 
                         {{-- Số điện thoại --}}

@@ -22,6 +22,7 @@ class Checkout extends Component
     public string $website        = '';  // honeypot
     public int    $loadedAt       = 0;   // timestamp khi component mount
     public string $recaptchaToken = '';  // reCAPTCHA v3 token
+    public bool   $isLoggedIn     = false;
 
     protected array $rules = [
         'customerName' => 'required|string|max:255',
@@ -40,6 +41,13 @@ class Checkout extends Component
     public function mount(): void
     {
         $this->loadedAt = time();
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $this->customerName = $user->name;
+            $this->email        = $user->email;
+            $this->isLoggedIn   = true;
+        }
     }
 
     public function placeOrder(PlaceOrderAction $action): mixed
