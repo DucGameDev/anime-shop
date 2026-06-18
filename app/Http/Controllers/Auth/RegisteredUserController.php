@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -18,33 +20,21 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
-     */
+    /** @throws ValidationException */
     public function store(Request $request): RedirectResponse
     {
-        // Honeypot
-        if ($request->input('_hp', '') !== '') {
-            Log::warning('Register honeypot triggered', ['ip' => $request->ip()]);
-            return redirect()->route('register');
-        }
-
-        // Rate limit: 5 lần đăng ký / 10 phút theo IP
+        // Rate limit: 5 lần / 10 phút theo IP
         $key = 'register:' . $request->ip();
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
+            $minutes = (int) ceil($seconds / 60);
             throw ValidationException::withMessages([
-                'email' => "Quá nhiều lần thử. Vui lòng thử lại sau {$seconds} giây.",
+                'name' => "Bạn đã thử quá nhiều lần. Vui lòng thử lại sau {$minutes} phút.",
             ]);
         }
         RateLimiter::hit($key, 600);
@@ -55,6 +45,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // reCAPTCHA v3 — bỏ qua khi chưa cấu hình
         $siteKey = config('services.recaptcha.site_key');
         if ($siteKey !== '') {
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [

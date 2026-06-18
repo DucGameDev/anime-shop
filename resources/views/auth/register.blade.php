@@ -26,11 +26,6 @@
                     <input type="hidden" name="recaptcha_token" value="">
                     @endif
 
-                    {{-- Honeypot --}}
-                    <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;" aria-hidden="true" tabindex="-1">
-                        <input type="text" name="_hp" value="" autocomplete="nope" tabindex="-1">
-                    </div>
-
                     <div>
                         <label for="name" class="block text-sm font-medium text-neutral-text mb-1">Họ tên</label>
                         <x-input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Nguyễn Văn A" />
