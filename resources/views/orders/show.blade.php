@@ -77,15 +77,49 @@
                     </p>
                 </div>
 
+                <div class="my-6 border-t border-dashed border-gray-200"></div>
+
+                {{-- QR Thanh toán --}}
+                @php
+                    $bankId      = config('payment.bank_id');
+                    $accountNo   = config('payment.account_no');
+                    $accountName = config('payment.account_name');
+                    $amount      = (int) $order->total_amount;
+                    $orderRef    = 'DH' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT);
+                    $qrUrl       = "https://img.vietqr.io/image/{$bankId}-{$accountNo}-compact2.png"
+                                 . "?amount={$amount}"
+                                 . "&addInfo=" . urlencode($orderRef)
+                                 . "&accountName=" . urlencode($accountName);
+                @endphp
+
+                <div class="text-center">
+                    <h2 class="mb-1 text-sm font-semibold text-neutral-text">Thanh toán chuyển khoản</h2>
+                    <p class="mb-4 text-xs text-neutral-muted">Quét mã QR bằng app ngân hàng để thanh toán</p>
+
+                    <div class="inline-block rounded-2xl border-2 border-primary-light p-3 shadow-sm">
+                        <img src="{{ $qrUrl }}" alt="QR thanh toán" class="h-52 w-52 rounded-xl">
+                    </div>
+
+                    <div class="mt-4 space-y-1 text-sm">
+                        <p><span class="text-neutral-muted">Ngân hàng:</span> <span class="font-semibold text-neutral-text">Vietcombank (VCB)</span></p>
+                        <p><span class="text-neutral-muted">Số tài khoản:</span> <span class="font-semibold text-neutral-text font-mono">{{ $accountNo }}</span></p>
+                        <p><span class="text-neutral-muted">Chủ tài khoản:</span> <span class="font-semibold text-neutral-text">{{ $accountName }}</span></p>
+                        <p><span class="text-neutral-muted">Số tiền:</span> <span class="font-bold text-primary-dark">{{ number_format($amount, 0, ',', '.') }}₫</span></p>
+                        <p><span class="text-neutral-muted">Nội dung:</span> <span class="font-semibold text-neutral-text font-mono">{{ $orderRef }}</span></p>
+                    </div>
+
+                    <p class="mt-3 text-xs text-neutral-muted">
+                        Đơn hàng sẽ được xác nhận sau khi chúng tôi nhận được thanh toán.
+                    </p>
+                </div>
+
                 {{-- CTA --}}
                 <div class="mt-8 text-center">
-                    <x-button variant="primary">
-                        <a href="{{ route('products.index') }}" class="flex items-center gap-1.5">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
-                            </svg>
-                            Tiếp tục mua sắm
-                        </a>
+                    <x-button href="{{ route('products.index') }}" variant="primary">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
+                        </svg>
+                        Tiếp tục mua sắm
                     </x-button>
                 </div>
 
