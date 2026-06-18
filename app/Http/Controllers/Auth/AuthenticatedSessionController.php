@@ -26,6 +26,15 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // Admin đăng nhập nhầm trang khách → đăng xuất web, chuyển sang admin login
+        if (Auth::guard('web')->user()?->isAdmin()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->with('admin_redirect', true);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('account.orders', absolute: false));

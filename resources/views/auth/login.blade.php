@@ -7,6 +7,13 @@
 
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
+                @if (session('admin_redirect'))
+                    <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                        Tài khoản quản trị viên vui lòng đăng nhập tại
+                        <a href="/admin/login" class="font-semibold underline hover:text-amber-900">/admin/login</a>.
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
 
