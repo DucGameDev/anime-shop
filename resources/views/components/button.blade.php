@@ -2,6 +2,7 @@
     'variant' => 'primary',
     'size'    => 'base',
     'type'    => 'button',
+    'href'    => null,
 ])
 
 @php
@@ -14,11 +15,19 @@ $sizeClasses = match ($size) {
     'sm'    => 'min-h-[36px] px-3 py-1.5 text-sm',
     default => 'min-h-[44px] px-5 py-2.5 text-sm md:text-base',
 };
+
+$baseClasses = "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed $variantClasses $sizeClasses";
 @endphp
 
-<button
-    type="{{ $type }}"
-    {{ $attributes->merge(['class' => "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed $variantClasses $sizeClasses"]) }}
->
-    {{ $slot }}
-</button>
+@if ($href)
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $baseClasses]) }}>
+        {{ $slot }}
+    </a>
+@else
+    <button
+        type="{{ $type }}"
+        {{ $attributes->merge(['class' => $baseClasses]) }}
+    >
+        {{ $slot }}
+    </button>
+@endif

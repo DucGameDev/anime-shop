@@ -4,37 +4,38 @@
     <section class="relative overflow-hidden">
         <img src="/banner.png"
              alt="AnimeShop — Thế giới anime dành cho bạn"
-             class="w-full block max-h-64 sm:max-h-80 lg:max-h-96 object-cover object-top">
+             class="w-full block h-44 sm:h-64 lg:h-80 xl:h-96 object-cover object-top">
 
-        {{-- Text overlay — nằm trong vùng trắng bên trái (~38% ảnh) --}}
-        <div class="absolute inset-0 flex items-center pl-6 sm:pl-10 lg:pl-16">
-            <div class="w-[32%] sm:w-[30%] lg:w-[26%]">
+        {{-- Gradient đảm bảo text đọc được trên mọi màn hình --}}
+        <div class="absolute inset-0 bg-gradient-to-r from-white from-40% via-white/60 via-60% to-transparent"></div>
+
+        {{-- Text overlay — vùng trắng bên trái banner --}}
+        <div class="absolute inset-0 flex items-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="w-[58%] sm:w-[44%] lg:w-[30%] bg-white/70 backdrop-blur-sm rounded-xl px-4 py-4 shadow-[0_0_32px_16px_rgba(255,255,255,0.85)]">
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-primary text-white mb-2">
                     🎌 Hàng mới về mỗi tuần
                 </span>
-                <h1 class="text-sm sm:text-lg md:text-2xl lg:text-3xl font-bold text-primary-dark leading-tight">
+                <h1 class="text-sm sm:text-xl md:text-2xl lg:text-3xl font-bold text-primary-dark leading-snug">
                     Thiên đường đồ anime chính hãng tại Việt Nam
                 </h1>
-                <p class="mt-1.5 text-[11px] md:text-sm text-neutral-text hidden sm:block leading-relaxed">
+                <p class="mt-1.5 text-xs md:text-sm text-neutral-text hidden sm:block leading-relaxed">
                     Figure, áo, manga, sticker — tất cả trong một shop.
                     Giao hàng toàn quốc, đổi trả 7 ngày.
                 </p>
                 <div class="flex flex-wrap gap-2 mt-3">
-                    <x-button variant="primary" size="sm">
-                        <a href="{{ route('products.index') }}" class="flex items-center gap-1">
-                            Khám phá ngay
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
-                            </svg>
-                        </a>
+                    <x-button variant="primary" size="sm" href="{{ route('products.index') }}">
+                        Khám phá ngay
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-1" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                        </svg>
                     </x-button>
-                    <x-button variant="secondary" size="sm">
-                        <a href="{{ route('products.index') }}?category=figure">
-                            Xem figure
-                        </a>
+                    <x-button variant="secondary" size="sm" href="{{ route('products.index') }}?category=figure">
+                        Xem figure
                     </x-button>
                 </div>
+            </div>
             </div>
         </div>
     </section>
