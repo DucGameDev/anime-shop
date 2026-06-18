@@ -46,4 +46,17 @@ class OrderStatusChartWidget extends ChartWidget
     {
         return 'doughnut';
     }
+
+    protected function getOptions(): array
+    {
+        return [
+            'scales' => [
+                'x' => ['display' => false],
+                'y' => ['display' => false],
+            ],
+            'plugins' => [
+                'legend' => ['position' => 'bottom'],
+            ],
+        ];
+    }
 }
