@@ -9,7 +9,6 @@ use App\Models\Order;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -90,15 +89,6 @@ class Checkout extends Component
         if ($cartService->getItemCount() === 0) {
             return redirect()->route('cart.index');
         }
-
-        // Rate limit — tối đa 3 lần / 5 phút
-        $key = 'checkout:' . md5($this->email . '|' . request()->ip());
-        if (RateLimiter::tooManyAttempts($key, 3)) {
-            $seconds = RateLimiter::availableIn($key);
-            $this->addError('customerName', "Bạn đặt hàng quá nhanh. Vui lòng thử lại sau {$seconds} giây.");
-            return null;
-        }
-        RateLimiter::hit($key, 300);
 
         // Duplicate detection — cùng email đặt đơn trong vòng 10 phút
         $recentOrder = Order::where('customer_email', $this->email)
