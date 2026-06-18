@@ -14,6 +14,11 @@ class ProductList extends Component
 {
     use WithPagination;
 
+    protected function paginationView(): string
+    {
+        return 'livewire-pagination';
+    }
+
     public string $search   = '';
     public string $category = '';
     public int    $seed     = 0;
