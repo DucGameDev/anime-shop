@@ -17,6 +17,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -184,6 +185,22 @@ class ProductResource extends Resource
             ])
             ->bulkActions([
                 BulkActionGroup::make([
+                    BulkAction::make('changeCategory')
+                        ->label('Đổi danh mục')
+                        ->icon('heroicon-o-tag')
+                        ->color('warning')
+                        ->form([
+                            Select::make('category_id')
+                                ->label('Danh mục mới')
+                                ->required()
+                                ->relationship('category', 'name')
+                                ->preload(),
+                        ])
+                        ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
+                            $records->each->update(['category_id' => $data['category_id']]);
+                        })
+                        ->deselectRecordsAfterCompletion(),
+
                     DeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
