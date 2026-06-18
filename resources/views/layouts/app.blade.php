@@ -42,16 +42,12 @@
                 {{-- Nav — desktop (hidden on mobile) --}}
                 <nav class="hidden lg:flex items-center gap-8">
                     <a href="{{ route('home') }}"
-                       class="text-sm font-medium text-neutral-text hover:text-primary transition-colors">
+                       class="text-base font-medium text-neutral-text hover:text-primary transition-colors">
                         Trang chủ
                     </a>
                     <a href="{{ route('products.index') }}"
-                       class="text-sm font-medium text-neutral-text hover:text-primary transition-colors">
+                       class="text-base font-medium text-neutral-text hover:text-primary transition-colors">
                         Sản phẩm
-                    </a>
-                    <a href="{{ route('cart.index') }}"
-                       class="text-sm font-medium text-neutral-text hover:text-primary transition-colors">
-                        Giỏ hàng
                     </a>
                 </nav>
 
@@ -89,16 +85,12 @@
                  class="lg:hidden border-t border-gray-100 py-3 space-y-1"
                  style="display:none">
                 <a href="{{ route('home') }}"
-                   class="block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
+                   class="block px-3 py-2.5 rounded-lg text-base font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
                     Trang chủ
                 </a>
                 <a href="{{ route('products.index') }}"
-                   class="block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
+                   class="block px-3 py-2.5 rounded-lg text-base font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
                     Sản phẩm
-                </a>
-                <a href="{{ route('cart.index') }}"
-                   class="block px-3 py-2.5 rounded-lg text-sm font-medium text-neutral-text hover:text-primary hover:bg-primary-light transition-colors">
-                    Giỏ hàng
                 </a>
             </div>
         </x-container>

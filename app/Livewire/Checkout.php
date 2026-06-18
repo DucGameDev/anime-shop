@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Actions\PlaceOrderAction;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -39,6 +40,14 @@ class Checkout extends Component
         if ($cartService->getItemCount() === 0) {
             return redirect()->route('cart.index');
         }
+
+        $key = 'checkout:' . md5($this->email . '|' . request()->ip());
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            $this->addError('customerName', "Bạn đặt hàng quá nhanh. Vui lòng thử lại sau {$seconds} giây.");
+            return null;
+        }
+        RateLimiter::hit($key, 300);
 
         try {
             $order = $action->execute([
