@@ -34,6 +34,13 @@ class AdminUserResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
+    protected static ?string $slug = 'admin-users';
+
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('role', User::ROLE_ADMIN);
@@ -41,8 +48,7 @@ class AdminUserResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
-        // Không cho xóa chính mình
-        return $record->id !== auth()->id();
+        return $record->id !== auth('admin')->user()?->id;
     }
 
     public static function form(Form $form): Form

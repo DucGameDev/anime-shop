@@ -16,7 +16,7 @@ class EditAdminUser extends EditRecord
     {
         return [
             DeleteAction::make()
-                ->visible(fn (): bool => $this->record->id !== auth()->id()),
+                ->visible(fn (): bool => $this->record->id !== auth('admin')->user()?->id),
         ];
     }
 
