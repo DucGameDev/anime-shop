@@ -35,7 +35,8 @@ class OrderStatusChartWidget extends ChartWidget
                 [
                     'data'            => collect($statuses)->keys()->map(fn ($k) => $counts[$k] ?? 0)->toArray(),
                     'backgroundColor' => collect($statuses)->pluck('color')->toArray(),
-                    'borderWidth'     => 2,
+                    'borderRadius'    => 6,
+                    'borderWidth'     => 0,
                 ],
             ],
             'labels' => collect($statuses)->pluck('label')->toArray(),
@@ -44,18 +45,21 @@ class OrderStatusChartWidget extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
     }
 
     protected function getOptions(): array
     {
         return [
-            'scales' => [
-                'x' => ['display' => false],
-                'y' => ['display' => false],
+            'indexAxis' => 'y',
+            'plugins'   => [
+                'legend' => ['display' => false],
             ],
-            'plugins' => [
-                'legend' => ['position' => 'bottom'],
+            'scales' => [
+                'x' => [
+                    'ticks'    => ['stepSize' => 1],
+                    'beginAtZero' => true,
+                ],
             ],
         ];
     }
