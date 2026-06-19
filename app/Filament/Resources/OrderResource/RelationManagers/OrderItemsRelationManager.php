@@ -36,8 +36,8 @@ class OrderItemsRelationManager extends RelationManager
                     ->label('')
                     ->getStateUsing(fn (mixed $record): string =>
                         $record->product?->image_url
-                            ? '<img src="' . e($record->product->image_url) . '" class="h-14 w-14 rounded-lg object-cover" />'
-                            : '<div class="h-14 w-14 rounded-lg bg-gray-100"></div>'
+                            ? '<img src="' . e($record->product->image_url) . '" class="h-10 w-10 rounded-md object-cover" />'
+                            : '<div class="h-10 w-10 rounded-md bg-gray-100"></div>'
                     )
                     ->html(),
 
