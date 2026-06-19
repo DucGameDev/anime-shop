@@ -2,7 +2,7 @@
 
     {{-- ===== BANNER ===== --}}
     <section class="relative overflow-hidden">
-        <img src="/banner.png"
+        <img src="/images/banners/banner.png"
              alt="AnimeShop — Thế giới anime dành cho bạn"
              class="w-full block h-44 sm:h-64 lg:h-80 xl:h-96 object-cover object-top">
 
@@ -42,7 +42,7 @@
                 {{-- Banner lớn bên trái — tỉ lệ 2:1 --}}
                 <a href="{{ route('products.index') }}"
                    class="block lg:w-3/5 flex-shrink-0 rounded-xl overflow-hidden">
-                    <img src="/promo-freeship.jpg"
+                    <img src="/images/banners/promo-freeship.jpg"
                          alt="Freeship toàn quốc đơn từ 300K"
                          class="w-full aspect-[2/1] object-cover hover:scale-105 transition-transform duration-300">
                 </a>
@@ -51,13 +51,13 @@
                 <div class="flex-1 flex flex-col gap-3">
                     <a href="{{ route('products.index') }}"
                        class="block rounded-xl overflow-hidden">
-                        <img src="/promo-authentic.jpg"
+                        <img src="/images/banners/promo-authentic.jpg"
                              alt="Hàng chính hãng 100% Authentic"
                              class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300">
                     </a>
                     <a href="{{ route('products.index') }}?category=figure"
                        class="block rounded-xl overflow-hidden">
-                        <img src="/promo-figure.jpg"
+                        <img src="/images/banners/promo-figure.jpg"
                              alt="Figure mới về mỗi tuần"
                              class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300">
                     </a>
@@ -110,15 +110,32 @@
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach ([
-                    ['label' => 'Figure',   'cat' => 'figure',  'icon' => '🗿', 'bg' => 'bg-primary-light',   'text' => 'text-primary-dark'],
-                    ['label' => 'Áo',       'cat' => 'ao',      'icon' => '👕', 'bg' => 'bg-secondary-light', 'text' => 'text-secondary'],
-                    ['label' => 'Manga',    'cat' => 'manga',   'icon' => '📚', 'bg' => 'bg-info-light',      'text' => 'text-info'],
-                    ['label' => 'Sticker',  'cat' => 'sticker', 'icon' => '🎴', 'bg' => 'bg-warning-light',   'text' => 'text-warning'],
+                    ['label' => 'Figure',  'cat' => 'figure',  'img' => 'cat-figure.jpg', 'fallback' => 'from-primary-dark via-primary to-purple-400'],
+                    ['label' => 'Áo',      'cat' => 'ao',      'img' => 'cat-ao.jpg',     'fallback' => 'from-secondary via-pink-400 to-pink-300'],
+                    ['label' => 'Manga',   'cat' => 'manga',   'img' => 'cat-manga.jpg',  'fallback' => 'from-info via-blue-400 to-blue-300'],
+                    ['label' => 'Sticker', 'cat' => 'sticker', 'img' => 'cat-sticker.jpg','fallback' => 'from-warning via-amber-400 to-yellow-300'],
                 ] as $item)
                     <a href="{{ route('products.index') }}?category={{ $item['cat'] }}"
-                       class="flex flex-col items-center gap-2 rounded-xl py-6 px-4 {{ $item['bg'] }} hover:opacity-90 transition-opacity text-center">
-                        <span class="text-3xl">{{ $item['icon'] }}</span>
-                        <span class="font-semibold text-sm {{ $item['text'] }}">{{ $item['label'] }}</span>
+                       class="relative group overflow-hidden rounded-xl aspect-[3/4] block">
+
+                        {{-- Ảnh nền hoặc gradient fallback --}}
+                        @if (file_exists(public_path('images/categories/' . $item['img'])))
+                            <img src="/images/categories/{{ $item['img'] }}"
+                                 alt="{{ $item['label'] }}"
+                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        @else
+                            <div class="absolute inset-0 bg-gradient-to-br {{ $item['fallback'] }}"></div>
+                        @endif
+
+                        {{-- Gradient overlay từ dưới lên --}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+
+                        {{-- Label --}}
+                        <div class="absolute bottom-0 left-0 right-0 p-4">
+                            <p class="text-white font-bold text-lg leading-tight">{{ $item['label'] }}</p>
+                            <p class="text-white/70 text-xs mt-0.5">Xem tất cả →</p>
+                        </div>
+
                     </a>
                 @endforeach
             </div>

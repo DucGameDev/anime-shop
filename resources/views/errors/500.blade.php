@@ -2,7 +2,7 @@
     <x-container class="py-16">
         <div class="flex flex-col items-center justify-center text-center gap-6">
 
-            <img src="/images/500.png"
+            <img src="/images/errors/500.png"
                  alt="500 Server Error"
                  class="w-56 sm:w-72 drop-shadow-md select-none">
 
