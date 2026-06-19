@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // Hủy đơn chưa thanh toán sau 24 giờ — chạy mỗi giờ
-Schedule::command('orders:cancel-unpaid')->hourly();
+Schedule::command('orders:cancel-unpaid')->daily();
