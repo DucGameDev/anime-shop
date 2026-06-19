@@ -94,7 +94,7 @@
                                 wire:model="note"
                                 rows="2"
                                 placeholder="Yêu cầu đặc biệt, giờ giao hàng, ghi chú cho người bán..."
-                                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-neutral-text placeholder-neutral-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-neutral-text placeholder-neutral-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-y max-h-[8rem]"
                             ></textarea>
                         </div>
                     </div>
