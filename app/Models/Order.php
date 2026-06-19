@@ -38,4 +38,13 @@ class Order extends Model
     {
         return $query->where('status', $status);
     }
+
+    public function hasProductReviewedBy(int $productId, int $userId): bool
+    {
+        return Review::query()
+            ->where('order_id', $this->id)
+            ->where('product_id', $productId)
+            ->where('user_id', $userId)
+            ->exists();
+    }
 }

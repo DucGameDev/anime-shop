@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
 use Illuminate\View\View;
 
 class AccountController extends Controller
@@ -16,6 +17,10 @@ class AccountController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('account.orders', compact('orders'));
+        $reviewedProductIds = Review::where('user_id', auth()->id())
+            ->pluck('rating', 'product_id')
+            ->toArray();
+
+        return view('account.orders', compact('orders', 'reviewedProductIds'));
     }
 }

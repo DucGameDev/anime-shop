@@ -40,6 +40,18 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function averageRating(): float
+    {
+        $avg = $this->reviews()->avg('rating');
+
+        return $avg !== null ? (float) $avg : 0.0;
+    }
+
     public function scopeByCategory(Builder $query, string $categorySlug): Builder
     {
         return $query->whereHas('category', fn (Builder $q) => $q->where('slug', $categorySlug));

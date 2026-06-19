@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Review;
 use Illuminate\View\View;
 
 class OrderController extends Controller
@@ -13,6 +14,10 @@ class OrderController extends Controller
     {
         $order->load('items.product');
 
-        return view('orders.show', compact('order'));
+        $reviewedProductIds = auth()->check()
+            ? Review::where('user_id', auth()->id())->pluck('rating', 'product_id')->toArray()
+            : [];
+
+        return view('orders.show', compact('order', 'reviewedProductIds'));
     }
 }

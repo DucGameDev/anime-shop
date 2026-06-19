@@ -191,6 +191,14 @@
 
     </x-container>
 
+    {{-- ===== ĐÁNH GIÁ SẢN PHẨM ===== --}}
+    <div class="border-t border-gray-200 mt-10">
+        <x-container class="py-10">
+            <h2 class="text-xl font-bold text-neutral-text mb-6">Đánh giá sản phẩm</h2>
+            <livewire:product-reviews :product="$product" />
+        </x-container>
+    </div>
+
     {{-- ===== GỢI Ý SẢN PHẨM ===== --}}
     @if ($suggestions->isNotEmpty())
         <div class="border-t border-gray-200 bg-white">
