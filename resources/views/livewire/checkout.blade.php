@@ -6,7 +6,6 @@
 
 <div>
     @if (empty($items))
-        {{-- Giỏ trống --}}
         <div class="flex flex-col items-center justify-center py-20 text-center gap-4">
             <p class="text-neutral-muted">Giỏ hàng trống, không thể thanh toán.</p>
             <x-button variant="primary">
@@ -17,13 +16,52 @@
         <div class="flex flex-col lg:flex-row gap-8">
 
             {{-- ===== CỘT TRÁI: FORM ===== --}}
-            <div class="lg:w-2/3">
+            <div class="lg:w-2/3 space-y-4">
+
+                {{-- Chọn địa chỉ đã lưu (chỉ hiện khi đăng nhập và có địa chỉ) --}}
+                @if ($isLoggedIn && $addresses->isNotEmpty())
+                    <div class="rounded-lg bg-white p-5 shadow-sm">
+                        <h2 class="mb-3 text-base font-semibold text-neutral-text">Địa chỉ đã lưu</h2>
+                        <div class="space-y-2">
+                            @foreach ($addresses as $addr)
+                                <label
+                                    wire:click="selectAddress({{ $addr->id }})"
+                                    class="flex cursor-pointer items-start gap-3 rounded-lg border-2 p-3.5 transition-colors
+                                        {{ $selectedAddressId === $addr->id
+                                            ? 'border-primary bg-primary-light/50'
+                                            : 'border-gray-200 hover:border-gray-300' }}"
+                                >
+                                    <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2
+                                        {{ $selectedAddressId === $addr->id ? 'border-primary' : 'border-gray-300' }}">
+                                        @if ($selectedAddressId === $addr->id)
+                                            <div class="h-2 w-2 rounded-full bg-primary"></div>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="text-sm font-medium text-neutral-text">{{ $addr->recipient_name }}</span>
+                                            @if ($addr->label)
+                                                <span class="rounded bg-neutral-bg px-1.5 py-0.5 text-xs text-neutral-muted">{{ $addr->label }}</span>
+                                            @endif
+                                            @if ($addr->is_default)
+                                                <span class="rounded bg-primary-light px-1.5 py-0.5 text-xs font-medium text-primary">Mặc định</span>
+                                            @endif
+                                        </div>
+                                        <p class="mt-0.5 text-xs text-neutral-muted">{{ $addr->phone }} · {{ $addr->address }}</p>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Form thông tin --}}
                 <div class="rounded-lg bg-white p-6 shadow-sm">
                     <h2 class="mb-5 text-lg font-semibold text-neutral-text">Thông tin đặt hàng</h2>
 
                     <div class="space-y-4">
 
-                        {{-- Honeypot: ẩn với CSS, bot sẽ điền vào --}}
+                        {{-- Honeypot --}}
                         <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;" aria-hidden="true" tabindex="-1">
                             <input wire:model="website" type="text" name="website" autocomplete="off" tabindex="-1" />
                         </div>
@@ -69,7 +107,7 @@
                             @enderror
                         </div>
 
-                        {{-- Địa chỉ --}}
+                        {{-- Địa chỉ giao hàng --}}
                         <div>
                             <label class="mb-1 block text-sm font-medium text-neutral-text">
                                 Địa chỉ giao hàng <span class="text-red-500">*</span>
@@ -163,9 +201,10 @@
 
             {{-- ===== CỘT PHẢI: TÓM TẮT ===== --}}
             <div class="lg:w-1/3">
-                <div class="rounded-lg border border-gray-200 bg-white p-5 lg:sticky lg:top-20">
-                    <h2 class="mb-4 text-base font-semibold text-neutral-text">Tóm tắt đơn hàng</h2>
+                <div class="rounded-lg border border-gray-200 bg-white p-5 lg:sticky lg:top-20 space-y-4">
+                    <h2 class="text-base font-semibold text-neutral-text">Tóm tắt đơn hàng</h2>
 
+                    {{-- Danh sách sản phẩm --}}
                     <div class="space-y-2">
                         @foreach ($items as $item)
                             <div class="flex justify-between gap-2 text-sm">
@@ -179,19 +218,79 @@
                         @endforeach
                     </div>
 
-                    <div class="my-4 border-t border-dashed border-gray-200"></div>
+                    <div class="border-t border-dashed border-gray-200"></div>
 
-                    <div class="flex items-baseline justify-between">
-                        <span class="text-sm font-medium text-neutral-text">Tổng cộng</span>
-                        <span class="text-xl font-bold text-primary-dark tabular-nums">
-                            {{ number_format($total, 0, ',', '.') }}₫
-                        </span>
+                    {{-- Mã giảm giá --}}
+                    <div>
+                        @if ($appliedVoucher)
+                            <div class="flex items-center justify-between rounded-lg bg-green-50 border border-green-200 px-3 py-2">
+                                <div class="flex items-center gap-2">
+                                    <svg class="h-4 w-4 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span class="text-sm font-medium text-green-700">{{ $appliedVoucher }}</span>
+                                </div>
+                                <button
+                                    wire:click="removeVoucher"
+                                    type="button"
+                                    class="text-xs text-green-600 hover:text-green-800 transition-colors"
+                                >
+                                    Xóa
+                                </button>
+                            </div>
+                        @else
+                            <div class="flex gap-2">
+                                <x-input
+                                    wire:model="voucherInput"
+                                    type="text"
+                                    placeholder="Nhập mã giảm giá"
+                                    class="flex-1 uppercase"
+                                    wire:keydown.enter="applyVoucher"
+                                />
+                                <button
+                                    wire:click="applyVoucher"
+                                    wire:loading.attr="disabled"
+                                    wire:target="applyVoucher"
+                                    type="button"
+                                    class="shrink-0 rounded-lg border border-primary px-3 py-2 text-sm font-medium text-primary hover:bg-primary-light transition-colors disabled:opacity-60"
+                                >
+                                    Áp dụng
+                                </button>
+                            </div>
+                            @if ($voucherError)
+                                <p class="mt-1.5 text-xs text-red-600">{{ $voucherError }}</p>
+                            @endif
+                        @endif
                     </div>
 
-                    <p class="mt-1 text-xs text-neutral-muted">Chưa bao gồm phí vận chuyển</p>
+                    <div class="border-t border-dashed border-gray-200"></div>
+
+                    {{-- Tổng tiền --}}
+                    <div class="space-y-1.5">
+                        <div class="flex items-baseline justify-between text-sm">
+                            <span class="text-neutral-muted">Tạm tính</span>
+                            <span class="tabular-nums text-neutral-text">{{ number_format($total, 0, ',', '.') }}₫</span>
+                        </div>
+
+                        @if ($discountAmount > 0)
+                            <div class="flex items-baseline justify-between text-sm">
+                                <span class="text-green-600">Giảm giá ({{ $appliedVoucher }})</span>
+                                <span class="tabular-nums text-green-600">-{{ number_format($discountAmount, 0, ',', '.') }}₫</span>
+                            </div>
+                        @endif
+
+                        <div class="flex items-baseline justify-between pt-1 border-t border-gray-100">
+                            <span class="text-sm font-medium text-neutral-text">Tổng cộng</span>
+                            <span class="text-xl font-bold text-primary-dark tabular-nums">
+                                {{ number_format($finalTotal, 0, ',', '.') }}₫
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-neutral-muted">Chưa bao gồm phí vận chuyển</p>
 
                     {{-- Nút đặt hàng (desktop) --}}
-                    <div class="mt-5 hidden lg:block" x-data>
+                    <div class="hidden lg:block" x-data>
                         <button
                             @click="
                                 @if(config('services.recaptcha.site_key'))
@@ -213,6 +312,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     @endif
 </div>
