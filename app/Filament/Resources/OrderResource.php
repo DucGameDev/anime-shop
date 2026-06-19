@@ -135,9 +135,9 @@ class OrderResource extends Resource
                     ->content(function (\Filament\Forms\Components\Component $component): HtmlString {
                         /** @var \App\Models\Order|null $record */
                         $record    = $component->getRecord();
-                        $bankId    = env('PAYMENT_BANK_ID', '');
-                        $accountNo = env('PAYMENT_ACCOUNT_NO', '');
-                        $accountName = env('PAYMENT_ACCOUNT_NAME', '');
+                        $bankId      = config('payment.bank_id', '');
+                        $accountNo   = config('payment.account_no', '');
+                        $accountName = config('payment.account_name', '');
 
                         if (! $bankId || ! $accountNo || ! $record) {
                             return new HtmlString(
