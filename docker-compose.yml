@@ -9,7 +9,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html
-      - /var/www/html/vendor      # vendor stays inside container
+      - vendor_data:/var/www/html/vendor
     environment:
       - PHP_OPCACHE_ENABLE=0      # disable opcache in dev so edits take effect immediately
     networks:
@@ -63,6 +63,7 @@ services:
 
 volumes:
   mysql-data:
+  vendor_data:
 
 networks:
   anime-shop:
