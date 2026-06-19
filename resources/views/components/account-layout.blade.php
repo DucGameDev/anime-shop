@@ -55,18 +55,6 @@
                         Yêu thích
                     </a>
 
-                    <a href="#"
-                       class="flex shrink-0 items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap
-                           {{ request()->routeIs('account.vouchers')
-                               ? 'text-primary font-semibold bg-primary-light'
-                               : 'text-neutral-text hover:bg-gray-50' }}">
-                        <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/>
-                        </svg>
-                        Voucher
-                    </a>
-
                 </div>
 
                 {{-- Desktop: vertical nav --}}
@@ -116,18 +104,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
                             </svg>
                             Yêu thích
-                        </a>
-
-                        <a href="#"
-                           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors
-                               {{ request()->routeIs('account.vouchers')
-                                   ? 'text-primary font-semibold bg-primary-light'
-                                   : 'text-neutral-text hover:bg-gray-50' }}">
-                            <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/>
-                            </svg>
-                            Mã giảm giá
                         </a>
 
                     </div>
