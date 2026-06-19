@@ -12,14 +12,28 @@
                 <h1 class="mb-6 text-center text-2xl font-bold text-neutral-text">Tạo tài khoản</h1>
 
                 <form method="POST" action="{{ route('register') }}" class="space-y-4"
-                    @if(config('services.recaptcha.site_key'))
-                    x-data
-                    @submit.prevent="
-                        const token = await new Promise(resolve => grecaptcha.ready(() => grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(resolve)));
-                        $el.querySelector('[name=recaptcha_token]').value = token;
-                        $el.submit();
-                    "
-                    @endif
+                    x-data="{
+                        password: '',
+                        passwordConfirm: '',
+                        errors: {},
+                        validate() {
+                            this.errors = {};
+                            if (this.password.length > 0 && this.password.length < 8)
+                                this.errors.password = 'Mật khẩu phải có ít nhất 8 ký tự.';
+                            if (this.passwordConfirm.length > 0 && this.password !== this.passwordConfirm)
+                                this.errors.passwordConfirm = 'Mật khẩu xác nhận không khớp.';
+                        },
+                        async submit(e) {
+                            this.validate();
+                            if (Object.keys(this.errors).length) return;
+                            @if(config('services.recaptcha.site_key'))
+                            const token = await new Promise(resolve => grecaptcha.ready(() => grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(resolve)));
+                            e.target.querySelector('[name=recaptcha_token]').value = token;
+                            @endif
+                            e.target.submit();
+                        }
+                    }"
+                    @submit.prevent="submit($event)"
                 >
                     @csrf
                     @if(config('services.recaptcha.site_key'))
@@ -40,13 +54,17 @@
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-neutral-text mb-1">Mật khẩu</label>
-                        <x-input id="password" type="password" name="password" required autocomplete="new-password" placeholder="Tối thiểu 8 ký tự" />
+                        <x-input id="password" type="password" name="password" required autocomplete="new-password" placeholder="Tối thiểu 8 ký tự"
+                            x-model="password" @input="validate()" />
+                        <p x-show="errors.password" x-text="errors.password" class="mt-1 text-sm text-red-600"></p>
                         <x-input-error :messages="$errors->get('password')" class="mt-1" />
                     </div>
 
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-neutral-text mb-1">Xác nhận mật khẩu</label>
-                        <x-input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Nhập lại mật khẩu" />
+                        <x-input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Nhập lại mật khẩu"
+                            x-model="passwordConfirm" @input="validate()" />
+                        <p x-show="errors.passwordConfirm" x-text="errors.passwordConfirm" class="mt-1 text-sm text-red-600"></p>
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
                     </div>
 
