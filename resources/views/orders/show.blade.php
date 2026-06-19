@@ -117,11 +117,31 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="mt-3 flex justify-between border-t border-gray-200 pt-3">
-                        <span class="text-sm font-semibold text-neutral-text">Tổng cộng</span>
-                        <span class="text-base font-bold text-primary-dark tabular-nums">
-                            {{ number_format($order->total_amount, 0, ',', '.') }}₫
-                        </span>
+                    <div class="mt-3 border-t border-gray-200 pt-3 space-y-1.5">
+                        @if ($order->voucher_code)
+                            <div class="flex justify-between text-sm">
+                                <span class="text-neutral-muted">Tạm tính</span>
+                                <span class="tabular-nums text-neutral-text">
+                                    {{ number_format((float)$order->total_amount + (float)$order->discount_amount, 0, ',', '.') }}₫
+                                </span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-green-600">
+                                    Mã giảm giá
+                                    <span class="font-mono font-semibold rounded bg-green-50 px-1">{{ $order->voucher_code }}</span>
+                                </span>
+                                <span class="tabular-nums text-green-600">
+                                    -{{ number_format((float)$order->discount_amount, 0, ',', '.') }}₫
+                                </span>
+                            </div>
+                            <div class="border-t border-dashed border-gray-200 pt-1.5"></div>
+                        @endif
+                        <div class="flex justify-between">
+                            <span class="text-sm font-semibold text-neutral-text">Tổng cộng</span>
+                            <span class="text-base font-bold text-primary-dark tabular-nums">
+                                {{ number_format($order->total_amount, 0, ',', '.') }}₫
+                            </span>
+                        </div>
                     </div>
                 </div>
 

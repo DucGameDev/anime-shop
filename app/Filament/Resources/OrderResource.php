@@ -68,32 +68,17 @@ class OrderResource extends Resource
                     ->disabled()
                     ->formatStateUsing(fn (mixed $state): string => \Carbon\Carbon::parse($state)->format('H:i d/m/Y')),
 
-                Placeholder::make('discount_summary')
-                    ->label('Giảm giá')
-                    ->columnSpanFull()
+                TextInput::make('voucher_code')
+                    ->label('Mã giảm giá')
+                    ->disabled()
                     ->hidden(fn ($record): bool => ! $record?->voucher_code)
-                    ->content(function ($record): HtmlString {
-                        $subtotal  = (float) $record->total_amount + (float) $record->discount_amount;
-                        $discount  = (float) $record->discount_amount;
-                        $total     = (float) $record->total_amount;
+                    ->suffixIcon('heroicon-o-tag'),
 
-                        return new HtmlString(
-                            '<div style="display:flex;flex-direction:column;gap:0.5rem;padding:1rem 1.25rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.75rem;">'
-                            . '<div style="display:flex;justify-content:space-between;font-size:0.875rem;color:#374151;">'
-                            . '  <span>Tạm tính</span>'
-                            . '  <span>' . number_format($subtotal, 0, ',', '.') . '₫</span>'
-                            . '</div>'
-                            . '<div style="display:flex;justify-content:space-between;font-size:0.875rem;color:#16a34a;">'
-                            . '  <span>Mã giảm giá <strong style="font-family:monospace;background:#dcfce7;padding:0 6px;border-radius:4px;">' . e($record->voucher_code) . '</strong></span>'
-                            . '  <span>-' . number_format($discount, 0, ',', '.') . '₫</span>'
-                            . '</div>'
-                            . '<div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;color:#7e22ce;border-top:1px dashed #86efac;padding-top:0.5rem;margin-top:0.25rem;">'
-                            . '  <span>Tổng thanh toán</span>'
-                            . '  <span>' . number_format($total, 0, ',', '.') . '₫</span>'
-                            . '</div>'
-                            . '</div>'
-                        );
-                    }),
+                TextInput::make('discount_amount')
+                    ->label('Số tiền giảm')
+                    ->disabled()
+                    ->hidden(fn ($record): bool => ! $record?->voucher_code)
+                    ->formatStateUsing(fn (mixed $state): string => '-' . number_format((float) $state, 0, ',', '.') . '₫'),
 
                 Placeholder::make('status_progress')
                     ->label('Tiến trình đơn hàng')
