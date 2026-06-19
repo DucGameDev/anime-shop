@@ -39,7 +39,7 @@ class SecurityHeaders
             "img-src 'self' data: https:",
             "font-src 'self'",
             "connect-src 'self'",
-            "frame-src https://www.google.com",
+            "frame-src https://www.google.com https://maps.google.com",
             "object-src 'none'",
             "base-uri 'self'",
             "form-action 'self'",
