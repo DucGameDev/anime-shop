@@ -32,7 +32,7 @@ class AdminUserResource extends Resource
 
     protected static ?string $navigationGroup = 'Hệ thống';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $slug = 'admin-users';
 

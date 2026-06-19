@@ -16,6 +16,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ListProducts extends ListRecords
 {
@@ -24,6 +25,38 @@ class ListProducts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('export')
+                ->label('Xuất CSV')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('gray')
+                ->action(function (): StreamedResponse {
+                    $filename = 'products-' . now()->format('Y-m-d') . '.csv';
+
+                    return response()->streamDownload(function (): void {
+                        $handle = fopen('php://output', 'w');
+
+                        if ($handle === false) {
+                            return;
+                        }
+
+                        fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM cho Excel
+                        fputcsv($handle, ['ID', 'Tên sản phẩm', 'Danh mục', 'Giá', 'Tồn kho', 'Ngày thêm']);
+
+                        Product::with('category')->cursor()->each(function (Product $product) use ($handle): void {
+                            fputcsv($handle, [
+                                $product->id,
+                                $product->name,
+                                $product->category?->name ?? '',
+                                $product->price,
+                                $product->stock,
+                                $product->created_at->format('d/m/Y H:i'),
+                            ]);
+                        });
+
+                        fclose($handle);
+                    }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+                }),
+
             Action::make('downloadTemplate')
                 ->label('Tải file mẫu')
                 ->icon('heroicon-o-arrow-down-tray')

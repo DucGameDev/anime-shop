@@ -7,12 +7,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers\OrdersRelationManager;
 use App\Models\User;
+use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,9 +31,9 @@ class UserResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Khách hàng';
 
-    protected static ?string $navigationGroup = 'Hệ thống';
+    protected static ?string $navigationGroup = 'Khách hàng';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 1;
 
     public static function getEloquentQuery(): Builder
     {
@@ -119,6 +121,41 @@ class UserResource extends Resource
                     ->label('Ngày tham gia')
                     ->dateTime('d/m/Y')
                     ->sortable(),
+            ])
+            ->filters([
+                Filter::make('registered_from')
+                    ->label('Đăng ký từ ngày')
+                    ->form([
+                        DatePicker::make('date')->label('Từ ngày'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder =>
+                        $query->when(
+                            $data['date'] ?? null,
+                            fn (Builder $q, string $date): Builder => $q->whereDate('created_at', '>=', $date)
+                        )
+                    )
+                    ->indicateUsing(fn (array $data): ?string =>
+                        ($data['date'] ?? null)
+                            ? 'Từ ' . \Carbon\Carbon::parse($data['date'])->format('d/m/Y')
+                            : null
+                    ),
+
+                Filter::make('registered_until')
+                    ->label('Đăng ký đến ngày')
+                    ->form([
+                        DatePicker::make('date')->label('Đến ngày'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder =>
+                        $query->when(
+                            $data['date'] ?? null,
+                            fn (Builder $q, string $date): Builder => $q->whereDate('created_at', '<=', $date)
+                        )
+                    )
+                    ->indicateUsing(fn (array $data): ?string =>
+                        ($data['date'] ?? null)
+                            ? 'Đến ' . \Carbon\Carbon::parse($data['date'])->format('d/m/Y')
+                            : null
+                    ),
             ])
             ->actions([
                 ViewAction::make(),

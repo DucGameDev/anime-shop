@@ -85,7 +85,7 @@
                 <p class="text-sm font-semibold text-primary-dark mb-1">Cam kết của AnimeShop</p>
                 <p class="text-sm text-neutral-muted">
                     100% hàng chính hãng có tem nhập khẩu. Nếu phát hiện hàng giả, hàng nhái, AnimeShop
-                    hoàn trả <strong class="text-neutral-text">gấp đôi</strong> giá trị đơn hàng, không cần hoàn hàng.
+                    hoàn trả <strong class="text-neutral-text">100%</strong> giá trị đơn hàng, không cần hoàn hàng.
                 </p>
             </div>
 

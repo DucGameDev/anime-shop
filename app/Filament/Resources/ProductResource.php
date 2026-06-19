@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
@@ -40,6 +42,10 @@ class ProductResource extends Resource
     protected static ?string $modelLabel = 'Sản phẩm';
 
     protected static ?string $pluralModelLabel = 'Sản phẩm';
+
+    protected static ?string $navigationGroup = 'Cửa hàng';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

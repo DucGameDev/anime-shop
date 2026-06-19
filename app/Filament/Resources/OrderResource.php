@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers\OrderItemsRelationManager;
 use App\Models\Order;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -17,8 +20,10 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderResource extends Resource
 {
@@ -32,7 +37,9 @@ class OrderResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Đơn hàng';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Cửa hàng';
+
+    protected static ?int $navigationSort = 3;
 
     public static function canCreate(): bool
     {
@@ -172,6 +179,11 @@ class OrderResource extends Resource
                         : '⚪ Khách vãng lai'
                     ),
 
+                TextColumn::make('customer_email')
+                    ->label('Email')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('phone')
                     ->label('Điện thoại')
                     ->searchable(),
@@ -213,6 +225,40 @@ class OrderResource extends Resource
                         'completed' => 'Hoàn thành',
                         'cancelled' => 'Đã hủy',
                     ]),
+
+                Filter::make('created_from')
+                    ->label('Từ ngày')
+                    ->form([
+                        DatePicker::make('date')->label('Từ ngày'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder =>
+                        $query->when(
+                            $data['date'] ?? null,
+                            fn (Builder $q, string $date): Builder => $q->whereDate('created_at', '>=', $date)
+                        )
+                    )
+                    ->indicateUsing(fn (array $data): ?string =>
+                        ($data['date'] ?? null)
+                            ? 'Từ ' . \Carbon\Carbon::parse($data['date'])->format('d/m/Y')
+                            : null
+                    ),
+
+                Filter::make('created_until')
+                    ->label('Đến ngày')
+                    ->form([
+                        DatePicker::make('date')->label('Đến ngày'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder =>
+                        $query->when(
+                            $data['date'] ?? null,
+                            fn (Builder $q, string $date): Builder => $q->whereDate('created_at', '<=', $date)
+                        )
+                    )
+                    ->indicateUsing(fn (array $data): ?string =>
+                        ($data['date'] ?? null)
+                            ? 'Đến ' . \Carbon\Carbon::parse($data['date'])->format('d/m/Y')
+                            : null
+                    ),
             ])
             ->actions([
                 EditAction::make(),

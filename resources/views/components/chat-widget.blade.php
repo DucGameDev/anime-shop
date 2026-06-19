@@ -191,7 +191,7 @@ function chatWidget() {
             },
             authentic: {
                 keywords: /chính hãng|hàng thật|fake|giả|nhái|authentic|nguồn gốc|xuất xứ|tem|seal/,
-                reply: '100% hàng chính hãng có tem nhập khẩu rõ ràng. Nếu phát hiện hàng giả, AnimeShop hoàn tiền gấp đôi — không cần hoàn hàng! 🔒',
+                reply: '100% hàng chính hãng có tem nhập khẩu rõ ràng. Nếu phát hiện hàng giả, AnimeShop hoàn tiền 100% giá trị đơn hàng! 🔒',
                 link: { text: 'Xem chính sách đổi trả', url: '/chinh-sach-doi-tra' },
             },
             stock: {
