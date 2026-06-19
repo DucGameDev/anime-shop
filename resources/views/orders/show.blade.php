@@ -64,8 +64,8 @@
 
                 <div class="my-6 border-t border-dashed border-gray-200"></div>
 
-                {{-- QR Thanh toán — chỉ hiện khi đơn chưa hoàn thành --}}
-                @if ($order->status !== 'completed' && $order->status !== 'cancelled')
+                {{-- QR Thanh toán — chỉ hiện khi chưa thanh toán --}}
+                @if ($order->status === 'unpaid')
                     @php
                         $bankId      = config('payment.bank_id');
                         $accountNo   = config('payment.account_no');
