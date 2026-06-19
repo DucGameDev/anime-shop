@@ -115,7 +115,7 @@
                     ['label' => 'Manga',   'cat' => 'manga',   'img' => 'cat-manga.jpg',  'fallback' => 'from-info via-blue-400 to-blue-300'],
                     ['label' => 'Sticker', 'cat' => 'sticker', 'img' => 'cat-sticker.jpg','fallback' => 'from-warning via-amber-400 to-yellow-300'],
                 ] as $item)
-                    <a href="{{ route('products.index') }}?category={{ $item['cat'] }}"
+                    <a href="{{ route('products.index', ['category' => $item['cat']]) }}"
                        class="relative group overflow-hidden rounded-xl aspect-[3/4] block">
 
                         {{-- Ảnh nền hoặc gradient fallback --}}

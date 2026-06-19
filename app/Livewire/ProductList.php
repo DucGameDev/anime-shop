@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\View\View;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +16,10 @@ class ProductList extends Component
     use WithPagination;
 
     public string $search   = '';
+
+    #[Url(as: 'category')]
     public string $category = '';
+
     public string $sort     = 'newest';
     public int    $seed     = 0;
 
