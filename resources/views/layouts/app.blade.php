@@ -266,6 +266,9 @@
         </x-container>
     </footer>
 
+    {{-- ===== CHAT WIDGET ===== --}}
+    <x-chat-widget />
+
     {{-- ===== TOAST NOTIFICATION ===== --}}
     <div
         x-data="{ show: false, message: '' }"
