@@ -15,12 +15,55 @@
         <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
 
             {{-- ===== Cột ảnh ===== --}}
-            <div class="w-full lg:w-1/2">
-                <img
-                    src="{{ $product->image_url }}"
-                    alt="{{ $product->name }}"
-                    class="aspect-square w-full object-cover rounded-lg shadow-sm"
+            <div class="w-full lg:w-1/2" x-data="{ lightbox: false }">
+
+                {{-- Ảnh — click để mở lightbox --}}
+                <div class="relative cursor-zoom-in group/img" @click="lightbox = true">
+                    <img
+                        src="{{ $product->image_url }}"
+                        alt="{{ $product->name }}"
+                        class="aspect-square w-full object-cover rounded-lg shadow-sm"
+                    >
+                    {{-- Zoom hint --}}
+                    <div class="absolute bottom-2 right-2 rounded-md bg-black/40 p-1.5 text-white opacity-0 group-hover/img:opacity-100 transition-opacity">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                {{-- Lightbox --}}
+                <div
+                    x-show="lightbox"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @click="lightbox = false"
+                    @keydown.escape.window="lightbox = false"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4"
+                    style="display:none"
                 >
+                    <div class="relative max-w-3xl w-full" @click.stop>
+                        <img
+                            src="{{ $product->image_url }}"
+                            alt="{{ $product->name }}"
+                            class="w-full rounded-xl object-contain max-h-[85vh] shadow-2xl"
+                        >
+                        <button
+                            @click="lightbox = false"
+                            class="absolute -top-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-lg text-neutral-text hover:text-primary transition-colors"
+                            aria-label="Đóng"
+                        >
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
             </div>
 
             {{-- ===== Cột thông tin ===== --}}

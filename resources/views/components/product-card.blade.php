@@ -12,15 +12,15 @@ $badgeClass    = match ($categorySlug) {
 };
 @endphp
 
-<div class="group flex flex-col rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+<div class="group flex flex-col rounded-xl bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden">
 
     {{-- Ảnh + badge --}}
-    <div class="relative">
+    <div class="relative overflow-hidden">
         <a href="{{ route('products.show', $product) }}" class="block" tabindex="-1" aria-hidden="true">
             <img
                 src="{{ $product->image_url }}"
                 alt="{{ $product->name }}"
-                class="aspect-square w-full object-cover rounded-t-xl group-hover:opacity-95 transition-opacity"
+                class="aspect-square w-full object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
             >
         </a>
