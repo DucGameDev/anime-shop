@@ -80,18 +80,33 @@
                                     <p class="text-xs font-semibold text-neutral-text truncate">{{ auth()->user()->name }}</p>
                                     <p class="text-xs text-neutral-muted truncate">{{ auth()->user()->email }}</p>
                                 </div>
-                                <a href="{{ route('account.orders') }}"
-                                   class="flex items-center gap-2 px-4 py-2 text-base text-neutral-text hover:bg-primary-light hover:text-primary transition-colors">
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
-                                    </svg>
-                                    Đơn hàng của tôi
-                                </a>
+                                @php
+                                    $menuItems = [
+                                        ['route' => 'account.orders',    'label' => 'Đơn hàng',       'icon' => 'M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z'],
+                                        ['route' => 'account.profile',   'label' => 'Thông tin',       'icon' => 'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z'],
+                                        ['route' => 'account.addresses', 'label' => 'Sổ địa chỉ',     'icon' => 'M15 10.5a3 3 0 11-6 0 3 3 0 016 0zM19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z'],
+                                        ['route' => 'account.favorites', 'label' => 'Yêu thích',      'icon' => 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z'],
+                                    ];
+                                @endphp
+
+                                @foreach ($menuItems as $item)
+                                    <a href="{{ route($item['route']) }}"
+                                       class="flex items-center gap-2 px-4 py-2 text-sm text-neutral-text hover:bg-primary-light hover:text-primary transition-colors
+                                           {{ request()->routeIs($item['route']) ? 'text-primary bg-primary-light/60' : '' }}">
+                                        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}"/>
+                                        </svg>
+                                        {{ $item['label'] }}
+                                    </a>
+                                @endforeach
+
+                                <div class="my-1 border-t border-gray-100"></div>
+
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"
-                                            class="flex w-full items-center gap-2 px-4 py-2 text-base text-red-600 hover:bg-red-50 transition-colors">
-                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
                                         </svg>
                                         Đăng xuất
