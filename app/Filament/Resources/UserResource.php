@@ -120,7 +120,10 @@ class UserResource extends Resource
                                     $img   = e($product->image_url ?? '');
                                     $name  = e($product->name);
                                     $qty   = $items->sum('quantity');
-                                    $price = number_format((float) $product->price, 0, ',', '.') . '₫';
+                                    $total = number_format(
+                                        $items->sum(fn ($i) => $i->quantity * (float) $i->price),
+                                        0, ',', '.'
+                                    ) . '₫';
 
                                     $html .= '<a href="' . $url . '" target="_blank"'
                                         . ' class="flex items-center gap-3 rounded-lg border border-gray-200 p-2 hover:border-primary transition-colors dark:border-white/10">';
@@ -133,7 +136,7 @@ class UserResource extends Resource
 
                                     $html .= '<div class="min-w-0">'
                                         . '<p class="truncate text-sm font-medium text-gray-900 dark:text-white">' . $name . '</p>'
-                                        . '<p class="text-xs text-gray-500 dark:text-gray-400">×' . $qty . ' — ' . $price . '</p>'
+                                        . '<p class="text-xs text-gray-500 dark:text-gray-400">×' . $qty . ' — ' . $total . '</p>'
                                         . '</div></a>';
                                 }
 
