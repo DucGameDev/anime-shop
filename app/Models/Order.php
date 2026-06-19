@@ -20,10 +20,13 @@ class Order extends Model
         'payment_method',
         'status',
         'total_amount',
+        'voucher_code',
+        'discount_amount',
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2',
+        'total_amount'    => 'decimal:2',
+        'discount_amount' => 'decimal:2',
     ];
 
     public function user(): BelongsTo

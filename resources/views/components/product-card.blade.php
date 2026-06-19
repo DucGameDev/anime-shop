@@ -14,7 +14,7 @@ $badgeClass    = match ($categorySlug) {
 
 <div class="group flex flex-col rounded-xl bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden">
 
-    {{-- Ảnh + badge --}}
+    {{-- Ảnh + badge + favorite --}}
     <div class="relative overflow-hidden">
         <a href="{{ route('products.show', $product) }}" class="block" tabindex="-1" aria-hidden="true">
             <img
@@ -27,6 +27,9 @@ $badgeClass    = match ($categorySlug) {
         <span class="absolute top-2 left-2 inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold {{ $badgeClass }}">
             {{ $categoryLabel }}
         </span>
+        <div class="absolute top-2 right-2">
+            <livewire:favorite-button :productId="$product->id" :key="'fav-'.$product->id" />
+        </div>
     </div>
 
     {{-- Thông tin --}}

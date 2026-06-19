@@ -58,7 +58,8 @@
             </div>
 
             {{-- Quy trình --}}
-            <div class="rounded-xl border border-gray-200 bg-white p-6 mb-6">
+            <div class="rounded-xl border border-gray-200 bg-wh
+            ite p-6 mb-6">
                 <h2 class="font-semibold text-neutral-text mb-4">Quy trình đổi trả</h2>
                 <div class="space-y-4">
                     @foreach ([

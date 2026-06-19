@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Models\Order;
+use App\Models\Voucher;
 use App\Services\CartService;
 
 class PlaceOrderAction
@@ -19,17 +20,21 @@ class PlaceOrderAction
             throw new \RuntimeException('Giỏ hàng trống');
         }
 
-        $paymentMethod = $customerData['payment_method'] ?? 'bank_transfer';
+        $paymentMethod  = $customerData['payment_method'] ?? 'bank_transfer';
+        $discountAmount = (float) ($customerData['discount_amount'] ?? 0);
+        $total          = max(0.0, $this->cartService->getTotal() - $discountAmount);
 
         $order = Order::create([
-            'customer_name'  => $customerData['customer_name'],
-            'customer_email' => $customerData['customer_email'] ?? null,
-            'phone'          => $customerData['phone'],
-            'address'        => $customerData['address'],
-            'note'           => $customerData['note'] ?? null,
-            'payment_method' => $paymentMethod,
-            'status'         => $paymentMethod === 'cod' ? 'pending' : 'unpaid',
-            'total_amount'   => $this->cartService->getTotal(),
+            'customer_name'   => $customerData['customer_name'],
+            'customer_email'  => $customerData['customer_email'] ?? null,
+            'phone'           => $customerData['phone'],
+            'address'         => $customerData['address'],
+            'note'            => $customerData['note'] ?? null,
+            'payment_method'  => $paymentMethod,
+            'status'          => $paymentMethod === 'cod' ? 'pending' : 'unpaid',
+            'total_amount'    => $total,
+            'voucher_code'    => $customerData['voucher_code'] ?? null,
+            'discount_amount' => $discountAmount > 0 ? $discountAmount : null,
         ]);
 
         foreach ($items as $item) {
@@ -38,6 +43,10 @@ class PlaceOrderAction
                 'quantity'   => $item['quantity'],
                 'price'      => $item['price'],
             ]);
+        }
+
+        if (! empty($customerData['voucher_code'])) {
+            Voucher::where('code', $customerData['voucher_code'])->increment('used_count');
         }
 
         $this->cartService->clearCart();

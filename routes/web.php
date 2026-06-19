@@ -36,6 +36,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
+    Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');
+    Route::get('/account/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
+    Route::get('/account/favorites', [AccountController::class, 'favorites'])->name('account.favorites');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

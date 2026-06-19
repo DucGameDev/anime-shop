@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -7,6 +9,7 @@ use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -75,5 +78,15 @@ class User extends Authenticatable implements FilamentUser
     {
         // Link via customer_email instead of user_id to support guest checkout
         return $this->hasMany(Order::class, 'customer_email', 'email');
+    }
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class)->orderByDesc('is_default');
+    }
+
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'favorites')->withTimestamps();
     }
 }
