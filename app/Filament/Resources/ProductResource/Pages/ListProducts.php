@@ -115,16 +115,22 @@ class ListProducts extends ListRecords
     {
         $tabs = [
             'all' => Tab::make('Tất cả')
-                ->badge(Product::count()),
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->whereNull('deleted_at'))
+                ->badge(Product::whereNull('deleted_at')->count()),
         ];
 
         foreach (Category::orderBy('name')->get() as $category) {
-            $count = Product::where('category_id', $category->id)->count();
+            $count = Product::whereNull('deleted_at')->where('category_id', $category->id)->count();
 
             $tabs[$category->slug] = Tab::make($category->name)
-                ->modifyQueryUsing(fn (Builder $query): Builder => $query->where('category_id', $category->id))
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->whereNull('deleted_at')->where('category_id', $category->id))
                 ->badge($count);
         }
+
+        $tabs['trashed'] = Tab::make('Đã xóa')
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->whereNotNull('deleted_at'))
+            ->badge(Product::whereNotNull('deleted_at')->count())
+            ->badgeColor('danger');
 
         return $tabs;
     }

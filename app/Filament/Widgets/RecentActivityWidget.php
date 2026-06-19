@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Widgets;
 
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\User;
 use Filament\Widgets\Widget;
-use Illuminate\Support\Collection;
 
 class RecentActivityWidget extends Widget
 {
@@ -71,18 +69,6 @@ class RecentActivityWidget extends Widget
                     },
                     'desc'  => $order->customer_name,
                     'time'  => $order->updated_at,
-                ]);
-            });
-
-        // Sản phẩm đã xóa
-        Product::onlyTrashed()->latest('deleted_at')->limit(5)->get()
-            ->each(function (Product $product) use ($activities): void {
-                $activities->push([
-                    'type'  => 'deleted',
-                    'color' => 'danger',
-                    'title' => 'Sản phẩm đã xóa: ' . $product->name,
-                    'desc'  => number_format((float) $product->price, 0, ',', '.') . '₫ — còn ' . $product->stock . ' trong kho lúc xóa',
-                    'time'  => $product->deleted_at,
                 ]);
             });
 
