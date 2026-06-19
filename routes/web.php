@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StaticPageController;
 use Illuminate\Support\Facades\Route;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\Border;
@@ -23,6 +24,11 @@ Route::get('/cart', fn () => view('cart.index'))->name('cart.index');
 Route::post('/cart/{product}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/checkout', fn () => view('checkout.index'))->name('checkout.index');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+Route::get('/huong-dan-dat-hang', [StaticPageController::class, 'orderGuide'])->name('static.order-guide');
+Route::get('/hinh-thuc-thanh-toan', [StaticPageController::class, 'payment'])->name('static.payment');
+Route::get('/chinh-sach-van-chuyen', [StaticPageController::class, 'shipping'])->name('static.shipping');
+Route::get('/chinh-sach-doi-tra', [StaticPageController::class, 'returns'])->name('static.returns');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

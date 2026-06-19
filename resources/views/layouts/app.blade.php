@@ -173,7 +173,7 @@
     {{-- ===== FOOTER ===== --}}
     <footer class="bg-neutral-bg border-t border-gray-200 mt-16">
         <x-container>
-            <div class="py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
                 {{-- Thương hiệu --}}
                 <div>
@@ -181,8 +181,37 @@
                         Anime<span class="text-primary">Shop</span>
                     </span>
                     <p class="mt-2 text-sm text-neutral-muted leading-relaxed">
-                        Thiên đường đồ anime — figure, áo, manga, sticker chính hãng.
+                        Thiên đường đồ anime — figure, áo, manga, sticker chính hãng. Giao hàng toàn quốc, đổi trả 7 ngày.
                     </p>
+                </div>
+
+                {{-- Hỗ trợ --}}
+                <div>
+                    <h3 class="text-sm font-semibold text-neutral-text uppercase tracking-wide mb-3">
+                        Hỗ trợ
+                    </h3>
+                    <ul class="space-y-2 text-sm text-neutral-muted">
+                        <li>
+                            <a href="{{ route('static.order-guide') }}" class="hover:text-primary transition-colors">
+                                Hướng dẫn đặt hàng
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('static.payment') }}" class="hover:text-primary transition-colors">
+                                Hình thức thanh toán
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('static.shipping') }}" class="hover:text-primary transition-colors">
+                                Chính sách vận chuyển
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('static.returns') }}" class="hover:text-primary transition-colors">
+                                Chính sách đổi trả
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
                 {{-- Liên hệ --}}
@@ -219,7 +248,7 @@
                         <iframe
                             src="https://maps.google.com/maps?q=Akihabara+Electric+Town,+Tokyo,+Japan&z=15&output=embed"
                             width="100%"
-                            height="160"
+                            height="140"
                             style="border:0;"
                             allowfullscreen=""
                             loading="lazy"
