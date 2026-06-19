@@ -30,25 +30,7 @@
         {{-- Tab 1: Thông tin cá nhân --}}
         <div x-show="tab === 'info'" x-transition class="p-6">
 
-            @if (session('status') === 'info-saved')
-                <div class="mb-4 flex items-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-                    <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                    </svg>
-                    Thông tin đã được lưu thành công.
-                </div>
-            @endif
-
-            @if ($successMessage && $activeTab === 'info')
-                <div class="mb-4 flex items-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-                    <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                    </svg>
-                    {{ $successMessage }}
-                </div>
-            @endif
-
-            <div class="space-y-4 max-w-md">
+<div class="space-y-4 max-w-md">
                 {{-- Họ tên --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-neutral-text">
@@ -97,15 +79,6 @@
 
         {{-- Tab 2: Đổi mật khẩu --}}
         <div x-show="tab === 'password'" x-transition class="p-6">
-
-            @if ($successMessage && $activeTab === 'password')
-                <div class="mb-4 flex items-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-                    <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                    </svg>
-                    {{ $successMessage }}
-                </div>
-            @endif
 
             <div class="space-y-4 max-w-md">
                 {{-- Mật khẩu hiện tại --}}
