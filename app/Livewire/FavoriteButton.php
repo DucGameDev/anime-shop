@@ -13,9 +13,12 @@ class FavoriteButton extends Component
 
     public bool $isFavorited = false;
 
-    public function mount(int $productId): void
+    public string $size = 'sm';
+
+    public function mount(int $productId, string $size = 'sm'): void
     {
         $this->productId   = $productId;
+        $this->size        = $size;
         $this->isFavorited = auth()->check()
             && auth()->user()->favorites()->where('product_id', $productId)->exists();
     }

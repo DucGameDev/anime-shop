@@ -159,13 +159,13 @@
                             </button>
                         </div>
 
-                        {{-- Nút thêm vào giỏ --}}
-                        <div class="mt-5">
+                        {{-- Nút thêm vào giỏ + yêu thích --}}
+                        <div class="mt-5 flex items-center gap-3">
                             <button
                                 type="button"
                                 @click="add()"
                                 :disabled="adding"
-                                class="w-full lg:w-auto min-w-[200px] min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm md:text-base font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                                class="flex-1 lg:flex-none min-w-[200px] min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm md:text-base font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 <svg x-show="adding" class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -178,6 +178,11 @@
                                 </svg>
                                 <span x-text="adding ? 'Đang thêm...' : 'Thêm vào giỏ'"></span>
                             </button>
+
+                            {{-- Nút yêu thích (lớn hơn so với product card) --}}
+                            <div class="shrink-0">
+                                <livewire:favorite-button :productId="$product->id" :key="'detail-fav-'.$product->id" size="lg" />
+                            </div>
                         </div>
                     </div>
                 @else
