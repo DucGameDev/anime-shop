@@ -104,13 +104,13 @@
                 {{-- Tồn kho --}}
                 <p class="text-sm text-neutral-muted">
                     @if ($product->stock > 10)
-                        <span class="text-green-600 font-medium">● Còn hàng</span>
+                        <span class="text-green-600 font-medium">Còn hàng</span>
                         ({{ $product->stock }} sản phẩm)
                     @elseif ($product->stock > 0)
-                        <span class="text-warning font-medium">● Còn ít hàng</span>
+                        <span class="text-warning font-medium">Còn ít hàng</span>
                         — chỉ còn {{ $product->stock }} sản phẩm
                     @else
-                        <span class="text-red-500 font-medium">● Hết hàng</span>
+                        <span class="text-red-500 font-medium">Hết hàng</span>
                     @endif
                 </p>
 
