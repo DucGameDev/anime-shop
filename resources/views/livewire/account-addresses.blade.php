@@ -11,16 +11,6 @@
         </x-button>
     </div>
 
-    {{-- Flash message --}}
-    @if ($successMessage)
-        <div class="mb-4 flex items-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-            <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-            </svg>
-            {{ $successMessage }}
-        </div>
-    @endif
-
     {{-- Form thêm / sửa địa chỉ --}}
     @if ($showForm)
         <div class="mb-6 rounded-xl bg-white shadow-sm overflow-hidden">
