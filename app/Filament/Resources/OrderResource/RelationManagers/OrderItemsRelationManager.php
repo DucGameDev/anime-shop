@@ -7,7 +7,6 @@ namespace App\Filament\Resources\OrderResource\RelationManagers;
 use App\Filament\Resources\ProductResource;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -32,13 +31,14 @@ class OrderItemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                ImageColumn::make('product_image')
+                TextColumn::make('product_image')
                     ->label('')
-                    ->getStateUsing(fn (mixed $record): ?string => $record->product?->image_url)
-                    ->disk(null)
-                    ->width(56)
-                    ->height(56)
-                    ->extraImgAttributes(['class' => 'rounded-lg object-cover']),
+                    ->getStateUsing(fn (mixed $record): string =>
+                        $record->product?->image_url
+                            ? '<img src="' . e($record->product->image_url) . '" class="h-14 w-14 rounded-lg object-cover" />'
+                            : '<div class="h-14 w-14 rounded-lg bg-gray-100"></div>'
+                    )
+                    ->html(),
 
                 TextColumn::make('product.name')
                     ->label('Sản phẩm')
