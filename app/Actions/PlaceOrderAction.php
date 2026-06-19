@@ -24,6 +24,7 @@ class PlaceOrderAction
             'customer_email' => $customerData['customer_email'] ?? null,
             'phone'          => $customerData['phone'],
             'address'        => $customerData['address'],
+            'note'           => $customerData['note'] ?? null,
             'status'         => 'pending',
             'total_amount'   => $this->cartService->getTotal(),
         ]);

@@ -84,6 +84,19 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        {{-- Ghi chú --}}
+                        <div>
+                            <label class="mb-1 block text-sm font-medium text-neutral-text">
+                                Ghi chú <span class="text-xs text-neutral-muted font-normal">(không bắt buộc)</span>
+                            </label>
+                            <textarea
+                                wire:model="note"
+                                rows="2"
+                                placeholder="Yêu cầu đặc biệt, giờ giao hàng, ghi chú cho người bán..."
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-neutral-text placeholder-neutral-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                            ></textarea>
+                        </div>
                     </div>
 
                     {{-- Nút đặt hàng (mobile) --}}

@@ -16,6 +16,7 @@ class Order extends Model
         'customer_email',
         'phone',
         'address',
+        'note',
         'status',
         'total_amount',
     ];

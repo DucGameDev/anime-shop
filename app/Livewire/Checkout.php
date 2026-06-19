@@ -17,6 +17,7 @@ class Checkout extends Component
     public string $email = '';
     public string $phone = '';
     public string $address = '';
+    public string $note    = '';
     public string $website        = '';  // honeypot
     public string $recaptchaToken = '';  // reCAPTCHA v3 token
     public bool   $isLoggedIn     = false;
@@ -85,6 +86,7 @@ class Checkout extends Component
                 'customer_email' => $this->email,
                 'phone'          => $this->phone,
                 'address'        => $this->address,
+                'note'           => $this->note ?: null,
             ]);
 
             // Lưu phone/address vào profile để tự điền lần sau

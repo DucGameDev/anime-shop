@@ -195,6 +195,12 @@ class OrderResource extends Resource
                     ->label('Địa chỉ')
                     ->disabled()
                     ->columnSpanFull(),
+
+                Textarea::make('note')
+                    ->label('Ghi chú')
+                    ->disabled()
+                    ->placeholder('Không có ghi chú')
+                    ->columnSpanFull(),
             ])
             ->columns(2);
     }
