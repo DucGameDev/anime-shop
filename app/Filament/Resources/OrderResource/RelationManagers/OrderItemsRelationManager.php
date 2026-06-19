@@ -32,8 +32,10 @@ class OrderItemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                ImageColumn::make('product.image_url')
+                ImageColumn::make('product_image')
                     ->label('')
+                    ->getStateUsing(fn (mixed $record): ?string => $record->product?->image_url)
+                    ->disk(null)
                     ->width(56)
                     ->height(56)
                     ->extraImgAttributes(['class' => 'rounded-lg object-cover']),
