@@ -56,6 +56,7 @@ class OrdersRelationManager extends RelationManager
                     ->label('Trạng thái')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
+                        'unpaid'    => 'gray',
                         'pending'   => 'warning',
                         'shipped'   => 'info',
                         'completed' => 'success',
@@ -63,6 +64,7 @@ class OrdersRelationManager extends RelationManager
                         default     => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'unpaid'    => 'Chưa thanh toán',
                         'pending'   => 'Chờ xử lý',
                         'shipped'   => 'Đang giao',
                         'completed' => 'Hoàn thành',

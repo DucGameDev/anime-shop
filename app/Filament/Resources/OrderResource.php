@@ -72,16 +72,17 @@ class OrderResource extends Resource
                     ->label('Tiến trình đơn hàng')
                     ->columnSpanFull()
                     ->content(function (Get $get): HtmlString {
-                        $status = $get('status') ?? 'pending';
+                        $status = $get('status') ?? 'unpaid';
                         $isCancelled = $status === 'cancelled';
 
                         $steps = [
+                            ['key' => 'unpaid',    'label' => 'Chưa TT',   'icon' => '💳'],
                             ['key' => 'pending',   'label' => 'Chờ xử lý', 'icon' => '🕐'],
                             ['key' => 'shipped',   'label' => 'Đang giao',  'icon' => '🚚'],
                             ['key' => 'completed', 'label' => 'Hoàn thành', 'icon' => '✅'],
                         ];
 
-                        $order = ['pending' => 0, 'shipped' => 1, 'completed' => 2];
+                        $order = ['unpaid' => 0, 'pending' => 1, 'shipped' => 2, 'completed' => 3];
                         $currentIdx = $order[$status] ?? 0;
 
                         $activeColor = match ($status) {
@@ -127,6 +128,41 @@ class OrderResource extends Resource
                         return new HtmlString($html);
                     }),
 
+                Placeholder::make('payment_qr')
+                    ->label('QR thanh toán')
+                    ->columnSpanFull()
+                    ->visible(fn (Get $get): bool => $get('status') === 'unpaid')
+                    ->content(function (\Filament\Forms\Components\Component $component): HtmlString {
+                        /** @var \App\Models\Order|null $record */
+                        $record    = $component->getRecord();
+                        $bankId    = env('PAYMENT_BANK_ID', '');
+                        $accountNo = env('PAYMENT_ACCOUNT_NO', '');
+                        $accountName = env('PAYMENT_ACCOUNT_NAME', '');
+
+                        if (! $bankId || ! $accountNo || ! $record) {
+                            return new HtmlString(
+                                '<p class="text-sm text-gray-400">Chưa cấu hình PAYMENT_BANK_ID / PAYMENT_ACCOUNT_NO.</p>'
+                            );
+                        }
+
+                        $amount  = (int) $record->total_amount;
+                        $ref     = 'DH' . str_pad((string) $record->id, 6, '0', STR_PAD_LEFT);
+                        $qrUrl   = 'https://img.vietqr.io/image/' . $bankId . '-' . $accountNo . '-compact2.png'
+                            . '?amount=' . $amount
+                            . '&addInfo=' . urlencode($ref)
+                            . '&accountName=' . urlencode($accountName);
+
+                        return new HtmlString(
+                            '<div class="flex flex-col items-start gap-3">'
+                            . '<img src="' . $qrUrl . '" alt="QR thanh toán" class="h-52 w-52 rounded-xl shadow" />'
+                            . '<p class="text-sm text-gray-500 dark:text-gray-400">'
+                            . 'Chuyển khoản <strong>' . number_format($amount, 0, ',', '.') . '₫</strong>'
+                            . ' · nội dung <strong>' . $ref . '</strong>'
+                            . '</p>'
+                            . '</div>'
+                        );
+                    }),
+
                 ToggleButtons::make('status')
                     ->label('Đổi trạng thái')
                     ->required()
@@ -134,18 +170,21 @@ class OrderResource extends Resource
                     ->live()
                     ->columnSpanFull()
                     ->options([
+                        'unpaid'    => 'Chưa thanh toán',
                         'pending'   => 'Chờ xử lý',
                         'shipped'   => 'Đang giao',
                         'completed' => 'Hoàn thành',
                         'cancelled' => 'Đã hủy',
                     ])
                     ->colors([
+                        'unpaid'    => 'gray',
                         'pending'   => 'warning',
                         'shipped'   => 'info',
                         'completed' => 'success',
                         'cancelled' => 'danger',
                     ])
                     ->icons([
+                        'unpaid'    => 'heroicon-o-credit-card',
                         'pending'   => 'heroicon-o-clock',
                         'shipped'   => 'heroicon-o-truck',
                         'completed' => 'heroicon-o-check-circle',
@@ -197,6 +236,7 @@ class OrderResource extends Resource
                     ->label('Trạng thái')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
+                        'unpaid'    => 'gray',
                         'pending'   => 'warning',
                         'shipped'   => 'info',
                         'completed' => 'success',
@@ -204,6 +244,7 @@ class OrderResource extends Resource
                         default     => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'unpaid'    => 'Chưa thanh toán',
                         'pending'   => 'Chờ xử lý',
                         'shipped'   => 'Đang giao',
                         'completed' => 'Hoàn thành',
