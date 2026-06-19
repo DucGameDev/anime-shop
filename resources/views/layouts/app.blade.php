@@ -296,6 +296,17 @@
         <span x-text="message"></span>
     </div>
 
+    @if (session('flash_toast'))
+    <script>
+        document.addEventListener('alpine:init', () => {}, { once: true });
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => window.dispatchEvent(new CustomEvent('show-toast', {
+                detail: { message: @js(session('flash_toast')) }
+            })), 300);
+        });
+    </script>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

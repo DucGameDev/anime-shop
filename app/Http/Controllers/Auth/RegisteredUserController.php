@@ -74,6 +74,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('account.orders', absolute: false));
+        return redirect(route('account.orders', absolute: false))
+            ->with('flash_toast', 'Đăng ký thành công! Chào mừng bạn đến với AnimeShop 🎉');
     }
 }
