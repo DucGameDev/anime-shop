@@ -30,6 +30,7 @@ class OrderItemsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
+            ->modifyQueryUsing(fn ($query) => $query->with(['product' => fn ($q) => $q->withTrashed()]))
             ->columns([
                 TextColumn::make('product_image')
                     ->label('')
@@ -49,7 +50,7 @@ class OrderItemsRelationManager extends RelationManager
                             : null
                     )
                     ->openUrlInNewTab()
-                    ->color('primary'),
+                    ->color(fn (): string => 'primary'),
 
                 TextColumn::make('quantity')
                     ->label('Số lượng'),
