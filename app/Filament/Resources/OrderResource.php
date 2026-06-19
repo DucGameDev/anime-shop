@@ -128,41 +128,6 @@ class OrderResource extends Resource
                         return new HtmlString($html);
                     }),
 
-                Placeholder::make('payment_qr')
-                    ->label('QR thanh toán')
-                    ->columnSpanFull()
-                    ->visible(fn (Get $get): bool => $get('status') === 'unpaid')
-                    ->content(function (\Filament\Forms\Components\Component $component): HtmlString {
-                        /** @var \App\Models\Order|null $record */
-                        $record    = $component->getRecord();
-                        $bankId      = config('payment.bank_id', '');
-                        $accountNo   = config('payment.account_no', '');
-                        $accountName = config('payment.account_name', '');
-
-                        if (! $bankId || ! $accountNo || ! $record) {
-                            return new HtmlString(
-                                '<p class="text-sm text-gray-400">Chưa cấu hình PAYMENT_BANK_ID / PAYMENT_ACCOUNT_NO.</p>'
-                            );
-                        }
-
-                        $amount  = (int) $record->total_amount;
-                        $ref     = 'DH' . str_pad((string) $record->id, 6, '0', STR_PAD_LEFT);
-                        $qrUrl   = 'https://img.vietqr.io/image/' . $bankId . '-' . $accountNo . '-compact2.png'
-                            . '?amount=' . $amount
-                            . '&addInfo=' . urlencode($ref)
-                            . '&accountName=' . urlencode($accountName);
-
-                        return new HtmlString(
-                            '<div class="flex flex-col items-start gap-3">'
-                            . '<img src="' . $qrUrl . '" alt="QR thanh toán" class="h-52 w-52 rounded-xl shadow" />'
-                            . '<p class="text-sm text-gray-500 dark:text-gray-400">'
-                            . 'Chuyển khoản <strong>' . number_format($amount, 0, ',', '.') . '₫</strong>'
-                            . ' · nội dung <strong>' . $ref . '</strong>'
-                            . '</p>'
-                            . '</div>'
-                        );
-                    }),
-
                 ToggleButtons::make('status')
                     ->label('Đổi trạng thái')
                     ->required()
