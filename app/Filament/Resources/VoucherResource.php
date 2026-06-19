@@ -97,11 +97,12 @@ class VoucherResource extends Resource
                     ->weight('bold')
                     ->copyable(),
 
-                Tables\Columns\BadgeColumn::make('type')
+                Tables\Columns\TextColumn::make('type')
                     ->label('Loại')
+                    ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'percent' => 'Phần trăm',
-                        'fixed'   => 'Cố định',
+                        'percent' => 'Phần trăm %',
+                        'fixed'   => 'Cố định ₫',
                         default   => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
@@ -165,6 +166,7 @@ class VoucherResource extends Resource
                         '0' => 'Đã tắt',
                     ]),
             ])
+            ->defaultSort('created_at', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
