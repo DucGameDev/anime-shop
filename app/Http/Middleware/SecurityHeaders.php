@@ -36,7 +36,7 @@ class SecurityHeaders
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com",
             "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data: https://img.vietqr.io",
+            "img-src 'self' data: https:",
             "font-src 'self'",
             "connect-src 'self'",
             "frame-src https://www.google.com",
