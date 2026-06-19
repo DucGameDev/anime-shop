@@ -34,42 +34,40 @@
                                 <button
                                     type="button"
                                     wire:click="selectAddress({{ $addr->id }})"
-                                    class="group relative w-full rounded-xl border-2 p-4 text-left transition-all
+                                    class="group w-full rounded-xl border-2 p-4 text-left transition-all
                                         {{ $active
                                             ? 'border-primary shadow-sm shadow-primary/10'
                                             : 'border-gray-200 hover:border-gray-300 hover:shadow-sm' }}"
                                 >
-                                    {{-- Radio dot --}}
-                                    <div class="absolute top-3.5 right-3.5 flex h-4 w-4 items-center justify-center rounded-full border-2 transition-colors
-                                        {{ $active ? 'border-primary bg-primary' : 'border-gray-300 group-hover:border-gray-400' }}">
-                                        @if ($active)
-                                            <div class="h-1.5 w-1.5 rounded-full bg-white"></div>
-                                        @endif
+                                    {{-- Badges + radio dot cùng hàng --}}
+                                    <div class="mb-2 flex items-center justify-between gap-2">
+                                        <div class="flex flex-wrap items-center gap-1.5">
+                                            @if ($addr->label)
+                                                <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium
+                                                    {{ $active ? 'bg-primary text-white' : 'bg-gray-100 text-neutral-muted' }}">
+                                                    {{ $addr->label }}
+                                                </span>
+                                            @endif
+                                            @if ($addr->is_default)
+                                                <span class="inline-flex items-center gap-1 rounded-md bg-primary-light px-2 py-0.5 text-xs font-medium text-primary">
+                                                    <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Mặc định
+                                                </span>
+                                            @endif
+                                        </div>
+                                        {{-- Radio dot --}}
+                                        <div class="shrink-0 flex h-4 w-4 items-center justify-center rounded-full border-2 transition-colors
+                                            {{ $active ? 'border-primary bg-primary' : 'border-gray-300 group-hover:border-gray-400' }}">
+                                            @if ($active)
+                                                <div class="h-1.5 w-1.5 rounded-full bg-white"></div>
+                                            @endif
+                                        </div>
                                     </div>
 
-                                    {{-- Badges --}}
-                                    <div class="mb-2 flex flex-wrap items-center gap-1.5">
-                                        @if ($addr->label)
-                                            <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium
-                                                {{ $active ? 'bg-primary text-white' : 'bg-gray-100 text-neutral-muted' }}">
-                                                {{ $addr->label }}
-                                            </span>
-                                        @endif
-                                        @if ($addr->is_default)
-                                            <span class="inline-flex items-center gap-1 rounded-md bg-primary-light px-2 py-0.5 text-xs font-medium text-primary">
-                                                <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                </svg>
-                                                Mặc định
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                    {{-- Tên --}}
-                                    <p class="pr-6 text-sm font-semibold text-neutral-text">{{ $addr->recipient_name }}</p>
-                                    {{-- SĐT --}}
+                                    <p class="text-sm font-semibold text-neutral-text">{{ $addr->recipient_name }}</p>
                                     <p class="mt-0.5 text-xs text-neutral-muted">{{ $addr->phone }}</p>
-                                    {{-- Địa chỉ --}}
                                     <p class="mt-1 text-xs text-neutral-text line-clamp-2 leading-relaxed">{{ $addr->address }}</p>
                                 </button>
                             @endforeach
