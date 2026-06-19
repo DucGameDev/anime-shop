@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Filament\Resources\OrderResource;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
@@ -34,7 +35,10 @@ class OrdersRelationManager extends RelationManager
                     ->label('Mã đơn')
                     ->formatStateUsing(fn (mixed $state): string =>
                         '#' . str_pad((string) $state, 6, '0', STR_PAD_LEFT)
-                    ),
+                    )
+                    ->url(fn (mixed $record): string => OrderResource::getUrl('edit', ['record' => $record->id]))
+                    ->openUrlInNewTab()
+                    ->color(fn (): string => 'primary'),
 
                 TextColumn::make('created_at')
                     ->label('Ngày đặt')
