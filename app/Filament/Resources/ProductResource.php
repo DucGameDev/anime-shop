@@ -183,6 +183,7 @@ class ProductResource extends Resource
                         return $indicators;
                     }),
             ])
+            ->defaultSort('created_at', 'desc')
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),

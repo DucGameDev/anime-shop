@@ -215,6 +215,7 @@ class UserResource extends Resource
                             : null
                     ),
             ])
+            ->defaultSort('created_at', 'desc')
             ->actions([
                 ViewAction::make(),
             ])

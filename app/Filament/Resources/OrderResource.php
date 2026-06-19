@@ -316,6 +316,7 @@ class OrderResource extends Resource
                             : null
                     ),
             ])
+            ->defaultSort('created_at', 'desc')
             ->actions([
                 EditAction::make(),
             ])
