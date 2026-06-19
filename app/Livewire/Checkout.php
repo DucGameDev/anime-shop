@@ -13,12 +13,13 @@ use Livewire\Component;
 
 class Checkout extends Component
 {
-    public string $customerName = '';
-    public string $email = '';
-    public string $phone = '';
-    public string $address = '';
-    public string $note    = '';
-    public string $website        = '';  // honeypot
+    public string $customerName  = '';
+    public string $email         = '';
+    public string $phone         = '';
+    public string $address       = '';
+    public string $note          = '';
+    public string $paymentMethod = 'bank_transfer';
+    public string $website       = '';  // honeypot
     public string $recaptchaToken = '';  // reCAPTCHA v3 token
     public bool   $isLoggedIn     = false;
 
@@ -87,6 +88,7 @@ class Checkout extends Component
                 'phone'          => $this->phone,
                 'address'        => $this->address,
                 'note'           => $this->note ?: null,
+                'payment_method' => $this->paymentMethod,
             ]);
 
             // Lưu phone/address vào profile để tự điền lần sau

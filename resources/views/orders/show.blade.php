@@ -142,6 +142,18 @@
                         <span class="font-medium text-neutral-text">Địa chỉ:</span>
                         <span class="text-neutral-muted"> {{ $order->address }}</span>
                     </p>
+                    <p>
+                        <span class="font-medium text-neutral-text">Thanh toán:</span>
+                        <span class="text-neutral-muted">
+                            {{ $order->payment_method === 'cod' ? 'Tiền mặt khi nhận hàng' : 'Chuyển khoản ngân hàng' }}
+                        </span>
+                    </p>
+                    @if ($order->note)
+                        <p>
+                            <span class="font-medium text-neutral-text">Ghi chú:</span>
+                            <span class="text-neutral-muted"> {{ $order->note }}</span>
+                        </p>
+                    @endif
                 </div>
 
                 {{-- Đánh giá sản phẩm — chỉ hiện với đơn completed --}}

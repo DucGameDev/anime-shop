@@ -191,6 +191,15 @@ class OrderResource extends Resource
                         'cancelled' => 'heroicon-o-x-circle',
                     ]),
 
+                TextInput::make('payment_method')
+                    ->label('Phương thức thanh toán')
+                    ->disabled()
+                    ->formatStateUsing(fn (mixed $state): string => match ($state) {
+                        'bank_transfer' => '🏦 Chuyển khoản ngân hàng',
+                        'cod'           => '💵 Thanh toán khi nhận hàng',
+                        default         => $state,
+                    }),
+
                 Textarea::make('address')
                     ->label('Địa chỉ')
                     ->disabled()
