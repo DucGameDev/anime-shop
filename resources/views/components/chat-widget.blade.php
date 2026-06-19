@@ -16,11 +16,11 @@
         <div class="bg-gradient-to-r from-primary-dark to-primary px-4 py-3 flex items-center justify-between flex-shrink-0">
             <div class="flex items-center gap-2.5">
                 <div class="relative flex-shrink-0">
-                    <img src="/images/bot-avatar.png" alt="Bot" class="h-9 w-9 rounded-full object-cover object-top ring-2 ring-white/30">
+                    <img src="/images/bot-avatar.png" alt="Bot" class="h-9 w-9 rounded-full object-cover object-top">
                     <span class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-400 border-2 border-white"></span>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-white leading-none">AnimeShop</p>
+                    <p class="text-sm font-semibold text-white leading-none">Hana</p>
                     <p class="text-xs text-white/70 mt-0.5">Trợ lý hỗ trợ · Online</p>
                 </div>
             </div>
@@ -91,22 +91,33 @@
         {{-- Input --}}
         <div class="border-t border-gray-100 bg-white flex-shrink-0 px-3 py-2.5">
             <form @submit.prevent="send()" class="flex items-center gap-2">
-                <input
-                    x-model="inputText"
-                    x-ref="input"
-                    type="text"
-                    placeholder="Nhập câu hỏi của bạn..."
-                    :disabled="busy"
-                    autocomplete="off"
-                    class="flex-1 text-sm rounded-full border border-gray-200 bg-gray-50 px-4 py-2 focus:outline-none focus:border-primary focus:bg-white transition-colors disabled:opacity-50"
-                >
+                <div class="relative flex-1">
+                    <input
+                        x-model="inputText"
+                        x-ref="input"
+                        type="text"
+                        :placeholder="busy ? 'Đang trả lời...' : 'Nhập câu hỏi của bạn...'"
+                        :disabled="busy"
+                        autocomplete="off"
+                        :class="busy
+                            ? 'border-gray-200 bg-gray-100 text-neutral-muted cursor-not-allowed placeholder:text-neutral-muted/70 italic'
+                            : 'border-gray-200 bg-gray-50 focus:border-primary focus:bg-white'"
+                        class="w-full text-sm rounded-full border px-4 py-2 focus:outline-none transition-colors"
+                    >
+                </div>
                 <button
                     type="submit"
                     :disabled="!inputText.trim() || busy"
                     class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary text-white transition-all hover:bg-primary-dark disabled:opacity-40 disabled:cursor-not-allowed"
                     aria-label="Gửi"
                 >
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    {{-- Spinner khi busy --}}
+                    <svg x-show="busy" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                    </svg>
+                    {{-- Icon gửi khi rảnh --}}
+                    <svg x-show="!busy" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
                     </svg>
                 </button>
@@ -143,6 +154,7 @@ function chatWidget() {
         typing: false,
         busy: false,
         hasOpened: false,
+        initiated: false,
         inputText: '',
         messages: [],
 
@@ -241,18 +253,19 @@ function chatWidget() {
 
         toggle() {
             this.open = !this.open;
-            if (this.open && this.messages.length === 0) {
+            if (this.open && !this.initiated) {
+                this.initiated = true;
                 this.hasOpened = true;
-                this.init();
+                this.startGreeting();
             } else if (this.open) {
                 this.$nextTick(() => this.$refs.input?.focus());
             }
         },
 
-        init() {
+        startGreeting() {
             setTimeout(() => {
                 this.typeMessage(
-                    'Xin chào! 👋 Mình là trợ lý AnimeShop. Bạn có thể hỏi mình về đặt hàng, phí ship, thanh toán, đổi trả hoặc theo dõi đơn hàng nhé!',
+                    '👋 Mình là Hana, trợ lý của AnimeShop~ Bạn cần mình giúp gì không? Cứ hỏi tự nhiên nha, đặt hàng, ship, thanh toán, đổi trả... mình biết hết á 😊',
                     null
                 );
             }, 400);
@@ -274,7 +287,7 @@ function chatWidget() {
 
             const reply = match
                 ? match.reply
-                : 'Mình chưa hiểu câu hỏi lắm 😅 Thử hỏi về: đặt hàng, phí ship, thanh toán, đổi trả hoặc theo dõi đơn hàng nhé!';
+                : 'Hm, câu này mình chịu rồi 😅 Bạn thử nói lại theo cách khác xem? Hoặc hỏi về đặt hàng, ship, thanh toán, đổi trả — mấy cái đó mình rành lắm!';
 
             await this.typeMessage(reply, match?.link ?? null);
             this.$nextTick(() => this.$refs.input?.focus());
@@ -282,6 +295,9 @@ function chatWidget() {
 
         async typeMessage(text, link) {
             this.busy = true;
+
+            // Delay nhỏ trước khi bot "bắt đầu gõ"
+            await new Promise(r => setTimeout(r, 600));
 
             // Typing indicator (3 chấm) — 1.2–1.8s tuỳ độ dài text
             this.typing = true;
