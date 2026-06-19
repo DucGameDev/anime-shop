@@ -21,35 +21,57 @@
                 {{-- Chọn địa chỉ đã lưu (chỉ hiện khi đăng nhập và có địa chỉ) --}}
                 @if ($isLoggedIn && $addresses->isNotEmpty())
                     <div class="rounded-lg bg-white p-5 shadow-sm">
-                        <h2 class="mb-3 text-base font-semibold text-neutral-text">Địa chỉ đã lưu</h2>
-                        <div class="space-y-2">
+                        <div class="mb-3 flex items-center justify-between">
+                            <h2 class="text-base font-semibold text-neutral-text">Địa chỉ giao hàng</h2>
+                            <a href="{{ route('account.addresses') }}" target="_blank"
+                               class="text-xs text-primary hover:text-primary-dark transition-colors">
+                                Quản lý địa chỉ
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             @foreach ($addresses as $addr)
-                                <label
+                                @php $active = $selectedAddressId === $addr->id; @endphp
+                                <button
+                                    type="button"
                                     wire:click="selectAddress({{ $addr->id }})"
-                                    class="flex cursor-pointer items-start gap-3 rounded-lg border-2 p-3.5 transition-colors
-                                        {{ $selectedAddressId === $addr->id
-                                            ? 'border-primary bg-primary-light/50'
-                                            : 'border-gray-200 hover:border-gray-300' }}"
+                                    class="group relative w-full rounded-xl border-2 p-4 text-left transition-all
+                                        {{ $active
+                                            ? 'border-primary shadow-sm shadow-primary/10'
+                                            : 'border-gray-200 hover:border-gray-300 hover:shadow-sm' }}"
                                 >
-                                    <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2
-                                        {{ $selectedAddressId === $addr->id ? 'border-primary' : 'border-gray-300' }}">
-                                        @if ($selectedAddressId === $addr->id)
-                                            <div class="h-2 w-2 rounded-full bg-primary"></div>
+                                    {{-- Radio dot --}}
+                                    <div class="absolute top-3.5 right-3.5 flex h-4 w-4 items-center justify-center rounded-full border-2 transition-colors
+                                        {{ $active ? 'border-primary bg-primary' : 'border-gray-300 group-hover:border-gray-400' }}">
+                                        @if ($active)
+                                            <div class="h-1.5 w-1.5 rounded-full bg-white"></div>
                                         @endif
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <span class="text-sm font-medium text-neutral-text">{{ $addr->recipient_name }}</span>
-                                            @if ($addr->label)
-                                                <span class="rounded bg-neutral-bg px-1.5 py-0.5 text-xs text-neutral-muted">{{ $addr->label }}</span>
-                                            @endif
-                                            @if ($addr->is_default)
-                                                <span class="rounded bg-primary-light px-1.5 py-0.5 text-xs font-medium text-primary">Mặc định</span>
-                                            @endif
-                                        </div>
-                                        <p class="mt-0.5 text-xs text-neutral-muted">{{ $addr->phone }} · {{ $addr->address }}</p>
+
+                                    {{-- Badges --}}
+                                    <div class="mb-2 flex flex-wrap items-center gap-1.5">
+                                        @if ($addr->label)
+                                            <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium
+                                                {{ $active ? 'bg-primary text-white' : 'bg-gray-100 text-neutral-muted' }}">
+                                                {{ $addr->label }}
+                                            </span>
+                                        @endif
+                                        @if ($addr->is_default)
+                                            <span class="inline-flex items-center gap-1 rounded-md bg-primary-light px-2 py-0.5 text-xs font-medium text-primary">
+                                                <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Mặc định
+                                            </span>
+                                        @endif
                                     </div>
-                                </label>
+
+                                    {{-- Tên --}}
+                                    <p class="pr-6 text-sm font-semibold text-neutral-text">{{ $addr->recipient_name }}</p>
+                                    {{-- SĐT --}}
+                                    <p class="mt-0.5 text-xs text-neutral-muted">{{ $addr->phone }}</p>
+                                    {{-- Địa chỉ --}}
+                                    <p class="mt-1 text-xs text-neutral-text line-clamp-2 leading-relaxed">{{ $addr->address }}</p>
+                                </button>
                             @endforeach
                         </div>
                     </div>
