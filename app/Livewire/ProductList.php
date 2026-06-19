@@ -16,6 +16,7 @@ class ProductList extends Component
 
     public string $search   = '';
     public string $category = '';
+    public string $sort     = 'newest';
     public int    $seed     = 0;
 
     public function mount(): void
@@ -35,15 +36,31 @@ class ProductList extends Component
         $this->resetPage();
     }
 
+    public function updatedSort(): void
+    {
+        $this->resetPage();
+    }
+
     public function render(): View
     {
-        $products = Product::query()
+        $query = Product::query()
             ->with('category')
             ->when($this->category, fn ($q) => $q->byCategory($this->category))
             ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->inStock()
-            ->orderByRaw("RAND({$this->seed})")
-            ->paginate(12);
+            ->inStock();
+
+        match ($this->sort) {
+            'price_asc'  => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            'popular'    => $query->orderByDesc(
+                                \App\Models\OrderItem::selectRaw('COALESCE(SUM(quantity), 0)')
+                                    ->whereColumn('product_id', 'products.id')
+                            ),
+            'random'     => $query->orderByRaw("RAND({$this->seed})"),
+            default      => $query->orderBy('created_at', 'desc'),
+        };
+
+        $products = $query->paginate(12);
 
         return view('livewire.product-list', [
             'products'   => $products,

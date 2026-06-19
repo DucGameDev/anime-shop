@@ -13,9 +13,6 @@
         <div class="absolute inset-0 flex items-center">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="w-[58%] sm:w-[44%] lg:w-[30%] bg-white/70 backdrop-blur-sm rounded-xl px-4 py-4 shadow-[0_0_32px_16px_rgba(255,255,255,0.85)]">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-primary text-white mb-2">
-                    🎌 Hàng mới về mỗi tuần
-                </span>
                 <h1 class="text-sm sm:text-xl md:text-2xl lg:text-3xl font-bold text-primary-dark leading-snug">
                     Thiên đường đồ anime chính hãng tại Việt Nam
                 </h1>
@@ -31,13 +28,43 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                         </svg>
                     </x-button>
-                    <x-button variant="secondary" size="sm" href="{{ route('products.index') }}?category=figure">
-                        Xem figure
-                    </x-button>
                 </div>
             </div>
             </div>
         </div>
+    </section>
+
+    {{-- ===== PROMO BANNERS ===== --}}
+    <section class="py-6 lg:py-8">
+        <x-container>
+            <div class="flex flex-col lg:flex-row gap-3">
+
+                {{-- Banner lớn bên trái — tỉ lệ 2:1 --}}
+                <a href="{{ route('products.index') }}"
+                   class="block lg:w-3/5 flex-shrink-0 rounded-xl overflow-hidden">
+                    <img src="/promo-freeship.jpg"
+                         alt="Freeship toàn quốc đơn từ 300K"
+                         class="w-full aspect-[2/1] object-cover hover:scale-105 transition-transform duration-300">
+                </a>
+
+                {{-- 2 banner nhỏ bên phải — tỉ lệ 8:3 để khớp chiều cao banner trái --}}
+                <div class="flex-1 flex flex-col gap-3">
+                    <a href="{{ route('products.index') }}"
+                       class="block rounded-xl overflow-hidden">
+                        <img src="/promo-authentic.jpg"
+                             alt="Hàng chính hãng 100% Authentic"
+                             class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300">
+                    </a>
+                    <a href="{{ route('products.index') }}?category=figure"
+                       class="block rounded-xl overflow-hidden">
+                        <img src="/promo-figure.jpg"
+                             alt="Figure mới về mỗi tuần"
+                             class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300">
+                    </a>
+                </div>
+
+            </div>
+        </x-container>
     </section>
 
     {{-- ===== SẢN PHẨM NỔI BẬT ===== --}}
