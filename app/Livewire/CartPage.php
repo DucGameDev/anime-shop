@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Product;
 use App\Services\CartService;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -13,10 +14,17 @@ class CartPage extends Component
         $cartService = app(CartService::class);
         $items       = $cartService->getItems();
 
-        if (isset($items[$productId])) {
-            $cartService->updateQuantity($productId, $items[$productId]['quantity'] + 1);
+        if (!isset($items[$productId])) {
+            return;
         }
 
+        $product = Product::find($productId);
+        if (!$product) {
+            return;
+        }
+
+        $newQty = min($items[$productId]['quantity'] + 1, $product->stock);
+        $cartService->updateQuantity($productId, $newQty);
         $this->dispatch('cart-updated');
     }
 
@@ -50,10 +58,16 @@ class CartPage extends Component
     {
         $cartService = app(CartService::class);
 
+        $items  = $cartService->getItems();
+        $stocks = Product::whereIn('id', array_keys($items))
+            ->pluck('stock', 'id')
+            ->toArray();
+
         return view('livewire.cart-page', [
-            'items'     => $cartService->getItems(),
+            'items'     => $items,
             'total'     => $cartService->getTotal(),
             'itemCount' => $cartService->getItemCount(),
+            'stocks'    => $stocks,
         ]);
     }
 }

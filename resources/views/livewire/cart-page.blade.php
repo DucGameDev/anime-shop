@@ -106,7 +106,8 @@
 
                                     <button
                                         wire:click="incrementQty({{ $item['product_id'] }})"
-                                        class="flex h-7 w-7 items-center justify-center rounded-md border border-gray-300 text-neutral-text transition-colors hover:border-primary hover:text-primary"
+                                        class="flex h-7 w-7 items-center justify-center rounded-md border border-gray-300 text-neutral-text transition-colors hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed"
+                                        {{ $item['quantity'] >= ($stocks[$item['product_id']] ?? 0) ? 'disabled' : '' }}
                                         aria-label="Tăng số lượng"
                                     >
                                         <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -115,6 +116,13 @@
                                     </button>
                                 </div>
                             </div>
+
+                            {{-- Cảnh báo hết stock --}}
+                            @if ($item['quantity'] >= ($stocks[$item['product_id']] ?? 0))
+                                <p class="mt-1 text-xs text-warning font-medium">
+                                    ⚠ Đã đạt số lượng tối đa trong kho
+                                </p>
+                            @endif
 
                             {{-- Subtotal --}}
                             <p class="mt-1 text-right text-xs text-neutral-muted">
