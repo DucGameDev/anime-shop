@@ -18,6 +18,10 @@
 /storage/*.key
 /storage/pail
 /vendor
+
+# Local docs
+master-guide-anime-shop.md
+prompts-anime-shop.md
 /docker-compose.override.yml
 Homestead.json
 Homestead.yaml
