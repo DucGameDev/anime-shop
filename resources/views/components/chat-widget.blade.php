@@ -16,7 +16,7 @@
         <div class="bg-gradient-to-r from-primary-dark to-primary px-4 py-3 flex items-center justify-between flex-shrink-0">
             <div class="flex items-center gap-2.5">
                 <div class="relative flex-shrink-0">
-                    <img src="/images/bot-avatar.png" alt="Bot" class="h-9 w-9 rounded-full object-cover object-top">
+                    <img src="/images/bot-avatar.png" alt="Bot" class="h-9 w-9 rounded-full object-cover object-top" loading="lazy">
                     <span class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-400 border-2 border-white"></span>
                 </div>
                 <div>
@@ -39,7 +39,7 @@
                     {{-- Bot --}}
                     <template x-if="msg.from === 'bot'">
                         <div class="flex items-end gap-2">
-                            <img src="/images/bot-avatar.png" alt="Bot" class="flex-shrink-0 h-6 w-6 rounded-full object-cover object-top mb-0.5">
+                            <img src="/images/bot-avatar.png" alt="Bot" class="flex-shrink-0 h-6 w-6 rounded-full object-cover object-top mb-0.5" loading="lazy">
                             <div class="max-w-[78%]">
                                 <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-3.5 py-2.5 text-sm text-neutral-text shadow-sm leading-relaxed">
                                     <span x-text="msg.text"></span>
@@ -76,7 +76,7 @@
 
             {{-- Typing indicator (3 chấm) --}}
             <div x-show="typing" class="flex items-end gap-2">
-                <img src="/images/bot-avatar.png" alt="Bot" class="flex-shrink-0 h-6 w-6 rounded-full object-cover object-top">
+                <img src="/images/bot-avatar.png" alt="Bot" class="flex-shrink-0 h-6 w-6 rounded-full object-cover object-top" loading="lazy">
                 <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
                     <div class="flex gap-1 items-center">
                         <span class="h-2 w-2 rounded-full bg-neutral-muted/60 animate-bounce" style="animation-delay:0ms"></span>

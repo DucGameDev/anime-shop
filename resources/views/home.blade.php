@@ -4,7 +4,8 @@
     <section class="relative overflow-hidden">
         <img src="/images/banners/banner.png"
              alt="AnimeShop — Thế giới anime dành cho bạn"
-             class="w-full block h-44 sm:h-64 lg:h-80 xl:h-96 object-cover object-top">
+             class="w-full block h-44 sm:h-64 lg:h-80 xl:h-96 object-cover object-top"
+             loading="eager">
 
         {{-- Gradient đảm bảo text đọc được trên mọi màn hình --}}
         <div class="absolute inset-0 bg-gradient-to-r from-white from-40% via-white/60 via-60% to-transparent"></div>
@@ -44,7 +45,8 @@
                    class="block lg:w-3/5 flex-shrink-0 rounded-xl overflow-hidden">
                     <img src="/images/banners/promo-freeship.jpg"
                          alt="Freeship toàn quốc đơn từ 300K"
-                         class="w-full aspect-[2/1] object-cover hover:scale-105 transition-transform duration-300">
+                         class="w-full aspect-[2/1] object-cover hover:scale-105 transition-transform duration-300"
+                         loading="lazy">
                 </a>
 
                 {{-- 2 banner nhỏ bên phải — tỉ lệ 8:3 để khớp chiều cao banner trái --}}
@@ -53,13 +55,15 @@
                        class="block rounded-xl overflow-hidden">
                         <img src="/images/banners/promo-authentic.jpg"
                              alt="Hàng chính hãng 100% Authentic"
-                             class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300">
+                             class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300"
+                             loading="lazy">
                     </a>
                     <a href="{{ route('products.index') }}?category=figure"
                        class="block rounded-xl overflow-hidden">
                         <img src="/images/banners/promo-figure.jpg"
                              alt="Figure mới về mỗi tuần"
-                             class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300">
+                             class="w-full aspect-[8/3] object-cover object-center hover:scale-105 transition-transform duration-300"
+                             loading="lazy">
                     </a>
                 </div>
 
@@ -122,7 +126,8 @@
                         @if (file_exists(public_path('images/categories/' . $item['img'])))
                             <img src="/images/categories/{{ $item['img'] }}"
                                  alt="{{ $item['label'] }}"
-                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 loading="lazy">
                         @else
                             <div class="absolute inset-0 bg-gradient-to-br {{ $item['fallback'] }}"></div>
                         @endif

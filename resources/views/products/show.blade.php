@@ -23,6 +23,7 @@
                         src="{{ $product->image_url }}"
                         alt="{{ $product->name }}"
                         class="aspect-square w-full object-cover rounded-lg shadow-sm"
+                        loading="eager"
                     >
                     {{-- Zoom hint --}}
                     <div class="absolute bottom-2 right-2 rounded-md bg-black/40 p-1.5 text-white opacity-0 group-hover/img:opacity-100 transition-opacity">
@@ -51,6 +52,7 @@
                             src="{{ $product->image_url }}"
                             alt="{{ $product->name }}"
                             class="w-full rounded-xl object-contain max-h-[85vh] shadow-2xl"
+                            loading="lazy"
                         >
                         <button
                             @click="lightbox = false"

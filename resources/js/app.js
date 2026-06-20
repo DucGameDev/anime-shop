@@ -54,4 +54,3 @@ Alpine.data('productDetail', (productId, maxStock) => ({
     },
 }));
 
-Livewire.start();

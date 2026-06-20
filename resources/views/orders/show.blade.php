@@ -83,7 +83,7 @@
                         <p class="mb-4 text-xs text-neutral-muted">Quét mã QR bằng app ngân hàng để thanh toán</p>
 
                         <div class="inline-block rounded-2xl border-2 border-primary-light p-3 shadow-sm">
-                            <img src="{{ $qrUrl }}" alt="QR thanh toán" class="h-52 w-52 rounded-xl">
+                            <img src="{{ $qrUrl }}" alt="QR thanh toán" class="h-52 w-52 rounded-xl" loading="eager">
                         </div>
 
                         <div class="mt-4 space-y-1 text-sm">

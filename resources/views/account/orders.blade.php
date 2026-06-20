@@ -41,7 +41,8 @@
                             @foreach ($thumbs as $item)
                                 <img src="{{ $item->product?->image_url ?? asset('images/placeholder.png') }}"
                                      alt="{{ $item->product?->name ?? 'Sản phẩm' }}"
-                                     class="h-12 w-12 rounded-lg border-2 border-white object-cover shadow-sm">
+                                     class="h-12 w-12 rounded-lg border-2 border-white object-cover shadow-sm"
+                                     loading="lazy">
                             @endforeach
                             @if ($extra > 0)
                                 <div class="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-white bg-primary-light text-xs font-semibold text-primary shadow-sm">

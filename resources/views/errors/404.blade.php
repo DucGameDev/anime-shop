@@ -7,7 +7,8 @@
             <div class="w-full max-w-sm lg:max-w-md flex-shrink-0">
                 <img src="/images/errors/404.png"
                      alt="Trang không tìm thấy"
-                     class="w-full h-auto drop-shadow-xl">
+                     class="w-full h-auto drop-shadow-xl"
+                     loading="eager">
             </div>
 
             {{-- Text --}}

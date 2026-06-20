@@ -4,7 +4,8 @@
 
             <img src="/images/errors/500.png"
                  alt="500 Server Error"
-                 class="w-56 sm:w-72 drop-shadow-md select-none">
+                 class="w-56 sm:w-72 drop-shadow-md select-none"
+                 loading="eager">
 
             <div class="space-y-2">
                 <h1 class="text-3xl font-bold text-neutral-text">Ồ không, máy chủ gặp sự cố!</h1>

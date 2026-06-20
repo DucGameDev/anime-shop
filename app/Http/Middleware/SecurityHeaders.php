@@ -35,9 +35,9 @@ class SecurityHeaders
         $csp = implode('; ', [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com",
-            "style-src 'self' 'unsafe-inline'",
+            "style-src 'self' 'unsafe-inline' https://fonts.bunny.net",
             "img-src 'self' data: https:",
-            "font-src 'self'",
+            "font-src 'self' https://fonts.bunny.net",
             "connect-src 'self'",
             "frame-src https://www.google.com https://maps.google.com",
             "object-src 'none'",

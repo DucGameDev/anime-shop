@@ -40,7 +40,8 @@
                         <a href="{{ route('products.show', ['product' => $item['slug']]) }}" class="flex-shrink-0">
                             <img src="{{ $item['image_url'] }}"
                                  alt="{{ $item['name'] }}"
-                                 class="h-20 w-20 rounded-lg object-cover">
+                                 class="h-20 w-20 rounded-lg object-cover"
+                                 loading="lazy">
                         </a>
 
                         {{-- Info --}}
