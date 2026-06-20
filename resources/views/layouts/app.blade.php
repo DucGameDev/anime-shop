@@ -23,6 +23,7 @@
     <link href="https://fonts.bunny.net/css?family=be-vietnam-pro:400,500,600,700&display=swap" rel="stylesheet">
 
     @livewireStyles
+    <script>window.livewireScriptConfig = { uri: "{{ url('/livewire/update') }}" };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
