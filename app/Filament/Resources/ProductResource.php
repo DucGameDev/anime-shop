@@ -91,6 +91,7 @@ class ProductResource extends Resource
                     ->label('URL ảnh')
                     ->url()
                     ->maxLength(2048)
+                    ->rule('regex:/^https?:\/\//i')
                     ->placeholder('https://example.com/image.jpg')
                     ->columnSpanFull(),
 

@@ -10,6 +10,7 @@ use App\Models\Voucher;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -35,10 +36,12 @@ class Checkout extends Component
     public string  $voucherError      = '';
 
     protected array $rules = [
-        'customerName' => 'required|string|max:255',
-        'email'        => 'required|email|max:255',
-        'phone'        => ['required', 'string', 'regex:/^[0-9]{10,11}$/'],
-        'address'      => 'required|string|min:10|max:500',
+        'customerName'  => 'required|string|max:255',
+        'email'         => 'required|email|max:255',
+        'phone'         => ['required', 'string', 'regex:/^[0-9]{10,11}$/'],
+        'address'       => 'required|string|min:10|max:500',
+        'note'          => 'nullable|string|max:1000',
+        'paymentMethod' => 'required|in:cod,bank_transfer',
     ];
 
     protected array $validationAttributes = [
@@ -128,6 +131,14 @@ class Checkout extends Component
     public function placeOrder(PlaceOrderAction $action): mixed
     {
         $this->validate();
+
+        // Rate limiting: tối đa 5 đơn/phút mỗi IP
+        $rateLimitKey = 'checkout:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+            $this->addError('customerName', 'Bạn đang thực hiện quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.');
+            return null;
+        }
+        RateLimiter::hit($rateLimitKey, 60);
 
         if ($this->website !== '') {
             Log::warning('Honeypot triggered', ['ip' => request()->ip()]);

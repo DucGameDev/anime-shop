@@ -31,9 +31,9 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'role',
         'phone',
         'address',
+        // 'role' intentionally excluded — assign directly via $user->role = User::ROLE_ADMIN
     ];
 
     public function isAdmin(): bool

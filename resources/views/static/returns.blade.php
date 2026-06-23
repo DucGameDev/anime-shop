@@ -45,12 +45,12 @@
                                 <svg class="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
                                 </svg>
-                                <span class="text-neutral-text">{!! $item['text'] !!}</span>
+                                <span class="text-neutral-text">{{ $item['text'] }}</span>
                             @else
                                 <svg class="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
                                 </svg>
-                                <span class="text-neutral-muted">{!! $item['text'] !!}</span>
+                                <span class="text-neutral-muted">{{ $item['text'] }}</span>
                             @endif
                         </div>
                     @endforeach

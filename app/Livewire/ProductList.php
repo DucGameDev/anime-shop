@@ -60,7 +60,7 @@ class ProductList extends Component
                                 \App\Models\OrderItem::selectRaw('COALESCE(SUM(quantity), 0)')
                                     ->whereColumn('product_id', 'products.id')
                             ),
-            'random'     => $query->orderByRaw("RAND({$this->seed})"),
+            'random'     => $query->orderByRaw('RAND(?)', [(int) $this->seed]),
             default      => $query->orderBy('created_at', 'desc'),
         };
 
