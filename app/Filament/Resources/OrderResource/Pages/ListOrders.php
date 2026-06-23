@@ -8,11 +8,53 @@ use App\Filament\Resources\OrderResource;
 use App\Models\Order;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ListRecords\Tab;
+use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ListOrders extends ListRecords
 {
     protected static string $resource = OrderResource::class;
+
+    public function getTabs(): array
+    {
+        $counts = Order::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $all = $counts->sum();
+
+        return [
+            'all' => Tab::make('Tất cả')
+                ->badge($all ?: null),
+
+            'unpaid' => Tab::make('Chưa thanh toán')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'unpaid'))
+                ->badge($counts['unpaid'] ?? null)
+                ->badgeColor('gray'),
+
+            'pending' => Tab::make('Chờ xử lý')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'pending'))
+                ->badge($counts['pending'] ?? null)
+                ->badgeColor('warning'),
+
+            'shipped' => Tab::make('Đang giao')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'shipped'))
+                ->badge($counts['shipped'] ?? null)
+                ->badgeColor('info'),
+
+            'completed' => Tab::make('Hoàn thành')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'completed'))
+                ->badge($counts['completed'] ?? null)
+                ->badgeColor('success'),
+
+            'cancelled' => Tab::make('Đã hủy')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'cancelled'))
+                ->badge($counts['cancelled'] ?? null)
+                ->badgeColor('danger'),
+        ];
+    }
 
     protected function getHeaderActions(): array
     {

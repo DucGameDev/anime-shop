@@ -14,16 +14,17 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Illuminate\Support\HtmlString;
 use Filament\Resources\Resource;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class OrderResource extends Resource
 {
@@ -41,9 +42,47 @@ class OrderResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    protected static int $globalSearchResultsLimit = 8;
+
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['customer_name', 'customer_email', 'phone'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return '#' . str_pad((string) $record->id, 6, '0', STR_PAD_LEFT) . ' — ' . $record->customer_name;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'SĐT'       => $record->phone,
+            'Trạng thái' => match ($record->status) {
+                'unpaid'    => 'Chưa thanh toán',
+                'pending'   => 'Chờ xử lý',
+                'shipped'   => 'Đang giao',
+                'completed' => 'Hoàn thành',
+                'cancelled' => 'Đã hủy',
+                default     => $record->status,
+            },
+            'Tổng tiền' => number_format((float) $record->total_amount, 0, ',', '.') . '₫',
+        ];
+    }
+
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return static::getUrl('edit', ['record' => $record]);
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->latest();
     }
 
     public static function form(Form $form): Form
@@ -254,15 +293,6 @@ class OrderResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->label('Trạng thái')
-                    ->options([
-                        'pending'   => 'Chờ xử lý',
-                        'shipped'   => 'Đang giao',
-                        'completed' => 'Hoàn thành',
-                        'cancelled' => 'Đã hủy',
-                    ]),
-
                 Filter::make('created_from')
                     ->label('Từ ngày')
                     ->form([
