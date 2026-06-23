@@ -21,7 +21,7 @@ class LatestOrdersWidget extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(Order::query()->with('user')->latest()->limit(10))
+            ->query(Order::query()->with('user')->latest()->limit(5))
             ->columns([
                 TextColumn::make('id')
                     ->label('Mã đơn')

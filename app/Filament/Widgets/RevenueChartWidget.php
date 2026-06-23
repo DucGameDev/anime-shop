@@ -24,9 +24,16 @@ class RevenueChartWidget extends ChartWidget
     {
         $days = collect(range(13, 0))->map(fn ($i) => Carbon::today()->subDays($i));
 
+        // 1 query thay vì 28
+        $raw = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as rev, COUNT(*) as cnt')
+            ->where('created_at', '>=', Carbon::today()->subDays(13)->startOfDay())
+            ->groupByRaw('DATE(created_at)')
+            ->get()
+            ->keyBy('date');
+
         $labels  = $days->map(fn ($d) => $d->format('d/m'))->toArray();
-        $revenue = $days->map(fn ($d) => (float) Order::whereDate('created_at', $d)->sum('total_amount'))->toArray();
-        $orders  = $days->map(fn ($d) => Order::whereDate('created_at', $d)->count())->toArray();
+        $revenue = $days->map(fn ($d) => (float) ($raw[$d->format('Y-m-d')]->rev ?? 0))->toArray();
+        $orders  = $days->map(fn ($d) => (int) ($raw[$d->format('Y-m-d')]->cnt ?? 0))->toArray();
 
         return [
             'datasets' => [

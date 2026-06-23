@@ -34,7 +34,7 @@ class PlaceOrderAction
             'status'          => $paymentMethod === 'cod' ? 'pending' : 'unpaid',
             'total_amount'    => $total,
             'voucher_code'    => $customerData['voucher_code'] ?? null,
-            'discount_amount' => $discountAmount > 0 ? $discountAmount : null,
+            'discount_amount' => $discountAmount,
         ]);
 
         foreach ($items as $item) {

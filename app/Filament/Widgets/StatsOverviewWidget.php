@@ -19,42 +19,46 @@ class StatsOverviewWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $today     = Carbon::today();
-        $yesterday = Carbon::yesterday();
+        $today      = Carbon::today();
+        $yesterday  = Carbon::yesterday();
         $monthStart = Carbon::now()->startOfMonth();
 
-        // Sparkline data: 7 ngày gần nhất
-        $last7 = collect(range(6, 0))->map(fn ($i) => Carbon::today()->subDays($i));
+        // 1 query cho cả sparkline 7 ngày + hôm nay + hôm qua
+        $sparklineRaw = Order::selectRaw('DATE(created_at) as date, COUNT(*) as cnt, SUM(total_amount) as rev')
+            ->where('created_at', '>=', Carbon::today()->subDays(6)->startOfDay())
+            ->groupByRaw('DATE(created_at)')
+            ->get()
+            ->keyBy('date');
 
-        $orderSparkline   = $last7->map(fn ($d) => Order::whereDate('created_at', $d)->count())->toArray();
-        $revenueSparkline = $last7->map(fn ($d) => (float) Order::whereDate('created_at', $d)->sum('total_amount'))->toArray();
+        $sparkDays = collect(range(6, 0))->map(fn ($i) => Carbon::today()->subDays($i));
 
-        // Hôm nay
-        $ordersToday        = Order::whereDate('created_at', $today)->count();
-        $revenueToday       = (float) Order::whereDate('created_at', $today)->sum('total_amount');
+        $orderSparkline   = $sparkDays->map(fn ($d) => (int) ($sparklineRaw[$d->format('Y-m-d')]->cnt ?? 0))->toArray();
+        $revenueSparkline = $sparkDays->map(fn ($d) => (float) ($sparklineRaw[$d->format('Y-m-d')]->rev ?? 0))->toArray();
 
-        // Hôm qua (để so sánh)
-        $ordersYesterday    = Order::whereDate('created_at', $yesterday)->count();
-        $revenueYesterday   = (float) Order::whereDate('created_at', $yesterday)->sum('total_amount');
+        $todayRow     = $sparklineRaw[$today->format('Y-m-d')]    ?? null;
+        $yesterdayRow = $sparklineRaw[$yesterday->format('Y-m-d')] ?? null;
 
-        // Tháng này
-        $ordersMonth        = Order::where('created_at', '>=', $monthStart)->count();
-        $revenueMonth       = (float) Order::where('created_at', '>=', $monthStart)->sum('total_amount');
+        $ordersToday      = (int) ($todayRow->cnt ?? 0);
+        $revenueToday     = (float) ($todayRow->rev ?? 0);
+        $ordersYesterday  = (int) ($yesterdayRow->cnt ?? 0);
+        $revenueYesterday = (float) ($yesterdayRow->rev ?? 0);
 
-        // Trend helpers
+        // 1 query cho tháng này
+        $monthRow     = Order::where('created_at', '>=', $monthStart)
+            ->selectRaw('COUNT(*) as cnt, COALESCE(SUM(total_amount), 0) as rev')
+            ->first();
+        $ordersMonth  = (int) ($monthRow->cnt ?? 0);
+        $revenueMonth = (float) ($monthRow->rev ?? 0);
+
+        // Trend so với hôm qua
         $orderDiff   = $ordersToday - $ordersYesterday;
         $revenueDiff = $revenueToday - $revenueYesterday;
 
-        $orderTrendDesc   = $orderDiff >= 0
-            ? '+' . $orderDiff . ' so với hôm qua'
-            : $orderDiff . ' so với hôm qua';
-        $orderTrendColor  = $orderDiff >= 0 ? 'success' : 'danger';
-        $orderTrendIcon   = $orderDiff >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
+        $orderTrendDesc  = ($orderDiff >= 0 ? '+' : '') . $orderDiff . ' so với hôm qua';
+        $orderTrendColor = $orderDiff >= 0 ? 'success' : 'danger';
+        $orderTrendIcon  = $orderDiff >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
 
-        $revenueDiffFmt   = number_format(abs($revenueDiff), 0, ',', '.') . '₫';
-        $revenueTrendDesc = $revenueDiff >= 0
-            ? '+' . $revenueDiffFmt . ' so với hôm qua'
-            : '-' . $revenueDiffFmt . ' so với hôm qua';
+        $revenueTrendDesc  = ($revenueDiff >= 0 ? '+' : '-') . number_format(abs($revenueDiff), 0, ',', '.') . '₫ so với hôm qua';
         $revenueTrendColor = $revenueDiff >= 0 ? 'success' : 'danger';
         $revenueTrendIcon  = $revenueDiff >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
 
@@ -93,7 +97,7 @@ class StatsOverviewWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-users')
                 ->color('primary'),
 
-            Stat::make('Sắp hết hàng', Product::where('stock', '<', 5)->count())
+            Stat::make('Sắp hết hàng', Product::whereBetween('stock', [1, 4])->count())
                 ->description('Sản phẩm còn dưới 5 cái')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color('danger'),
