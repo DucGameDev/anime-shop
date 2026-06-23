@@ -6,6 +6,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Order;
 use App\Models\User;
+use Carbon\Carbon;
 use Filament\Widgets\Widget;
 
 class RecentActivityWidget extends Widget
@@ -18,43 +19,80 @@ class RecentActivityWidget extends Widget
 
     protected static string $view = 'filament.widgets.recent-activity-widget';
 
+    public int $period = 7;
+
+    public int $page = 1;
+
+    protected int $perPage = 5;
+
+    protected function queryString(): array
+    {
+        return [];
+    }
+
+    public function setPeriod(int $period): void
+    {
+        $this->period = $period;
+        $this->page   = 1;
+    }
+
+    public function previousPage(): void
+    {
+        if ($this->page > 1) {
+            $this->page--;
+        }
+    }
+
+    public function nextPage(int $totalPages): void
+    {
+        if ($this->page < $totalPages) {
+            $this->page++;
+        }
+    }
+
+    public function gotoPage(int $page): void
+    {
+        $this->page = $page;
+    }
+
     protected function getViewData(): array
     {
+        $startDate  = Carbon::now()->subDays($this->period)->startOfDay();
         $activities = collect();
 
-        // Đơn hàng mới
-        Order::latest()->limit(5)->get()->each(function (Order $order) use ($activities): void {
-            $activities->push([
-                'type'  => 'order',
-                'icon'  => 'heroicon-o-shopping-cart',
-                'color' => 'warning',
-                'title' => 'Đơn hàng mới #' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT),
-                'desc'  => $order->customer_name . ' — ' . number_format((float) $order->total_amount, 0, ',', '.') . '₫',
-                'time'  => $order->created_at,
-            ]);
-        });
+        Order::where('created_at', '>=', $startDate)
+            ->latest()
+            ->get()
+            ->each(function (Order $order) use ($activities): void {
+                $activities->push([
+                    'type'  => 'order',
+                    'color' => 'warning',
+                    'title' => 'Đơn hàng mới #' . str_pad((string) $order->id, 6, '0', STR_PAD_LEFT),
+                    'desc'  => $order->customer_name . ' — ' . number_format((float) $order->total_amount, 0, ',', '.') . '₫',
+                    'time'  => $order->created_at,
+                ]);
+            });
 
-        // Khách hàng mới
-        User::latest()->limit(5)->get()->each(function (User $user) use ($activities): void {
-            $activities->push([
-                'type'  => 'user',
-                'icon'  => 'heroicon-o-user-plus',
-                'color' => 'success',
-                'title' => 'Khách hàng mới',
-                'desc'  => $user->name . ' — ' . $user->email,
-                'time'  => $user->created_at,
-            ]);
-        });
+        User::where('created_at', '>=', $startDate)
+            ->latest()
+            ->get()
+            ->each(function (User $user) use ($activities): void {
+                $activities->push([
+                    'type'  => 'user',
+                    'color' => 'success',
+                    'title' => 'Khách hàng mới',
+                    'desc'  => $user->name . ' — ' . $user->email,
+                    'time'  => $user->created_at,
+                ]);
+            });
 
-        // Đơn hàng cập nhật trạng thái (không phải pending)
         Order::whereIn('status', ['shipped', 'completed', 'cancelled'])
+            ->where('updated_at', '>=', $startDate)
             ->latest('updated_at')
-            ->limit(5)
             ->get()
             ->each(function (Order $order) use ($activities): void {
                 $activities->push([
                     'type'  => 'status',
-                    'icon'  => 'heroicon-o-arrow-path',
                     'color' => match ($order->status) {
                         'shipped'   => 'info',
                         'completed' => 'success',
@@ -72,8 +110,23 @@ class RecentActivityWidget extends Widget
                 ]);
             });
 
+        $sorted     = $activities->sortByDesc('time')->values();
+        $total      = $sorted->count();
+        $totalPages = (int) ceil($total / $this->perPage);
+        $page       = min($this->page, max(1, $totalPages));
+        $items      = $sorted->slice(($page - 1) * $this->perPage, $this->perPage)->values();
+
+        $window = collect(range(1, $totalPages))
+            ->filter(fn ($p) => $p === 1 || $p === $totalPages || abs($p - $page) <= 2)
+            ->values();
+
         return [
-            'activities' => $activities->sortByDesc('time')->take(15)->values(),
+            'activities' => $items,
+            'total'      => $total,
+            'page'       => $page,
+            'totalPages' => $totalPages,
+            'window'     => $window,
+            'period'     => $this->period,
         ];
     }
 }
