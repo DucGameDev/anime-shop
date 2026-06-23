@@ -50,7 +50,14 @@ class ProductList extends Component
         $query = Product::query()
             ->with('category')
             ->when($this->category, fn ($q) => $q->byCategory($this->category))
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->search, function ($q): void {
+                $kw = $this->search;
+                $q->where(fn ($sub) => $sub
+                    ->where('name', 'like', "%{$kw}%")
+                    ->orWhere('description', 'like', "%{$kw}%")
+                    ->orWhereHas('category', fn ($cat) => $cat->where('name', 'like', "%{$kw}%"))
+                );
+            })
             ->inStock();
 
         match ($this->sort) {

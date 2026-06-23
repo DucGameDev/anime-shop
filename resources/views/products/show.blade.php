@@ -1,4 +1,46 @@
-<x-app-layout :title="$product->name . ' — AnimeShop'">
+@php
+    $ogDesc = $product->description
+        ? Str::limit(strip_tags($product->description), 160)
+        : "Mua {$product->name} chính hãng tại AnimeShop. Giao hàng toàn quốc, hoàn trả 7 ngày.";
+@endphp
+<x-app-layout
+    :title="$product->name . ' — AnimeShop'"
+    :description="$ogDesc"
+    :ogImage="$product->image_url"
+    ogType="product"
+>
+
+    @push('head')
+    @php
+        $ldJson = [
+            '@context' => 'https://schema.org/',
+            '@type'    => 'Product',
+            'name'     => $product->name,
+            'image'    => $product->image_url,
+            'description' => Str::limit(strip_tags($product->description ?? ''), 500),
+            'sku'      => (string) $product->id,
+            'brand'    => ['@type' => 'Brand', 'name' => 'AnimeShop'],
+            'offers'   => [
+                '@type'         => 'Offer',
+                'url'           => url()->current(),
+                'priceCurrency' => 'VND',
+                'price'         => (string) $product->price,
+                'availability'  => $product->stock > 0
+                    ? 'https://schema.org/InStock'
+                    : 'https://schema.org/OutOfStock',
+            ],
+        ];
+        $avgRating = $product->averageRating();
+        if ($avgRating > 0) {
+            $ldJson['aggregateRating'] = [
+                '@type'       => 'AggregateRating',
+                'ratingValue' => round($avgRating, 1),
+                'reviewCount' => $product->reviews()->count(),
+            ];
+        }
+    @endphp
+    <script type="application/ld+json">{!! json_encode($ldJson, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+    @endpush
 
     <x-container class="py-8 lg:py-12">
 
@@ -24,6 +66,7 @@
                         alt="{{ $product->name }}"
                         class="aspect-square w-full object-cover rounded-lg shadow-sm"
                         loading="eager"
+                        onerror="this.onerror=null;this.src='/images/og-image.png'"
                     >
                     {{-- Zoom hint --}}
                     <div class="absolute bottom-2 right-2 rounded-md bg-black/40 p-1.5 text-white opacity-0 group-hover/img:opacity-100 transition-opacity">

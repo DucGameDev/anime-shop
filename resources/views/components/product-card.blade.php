@@ -22,6 +22,7 @@ $badgeClass    = match ($categorySlug) {
                 alt="{{ $product->name }}"
                 class="aspect-square w-full object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
+                onerror="this.onerror=null;this.src='/images/og-image.png'"
             >
         </a>
         <span class="absolute top-2 left-2 inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold {{ $badgeClass }}">

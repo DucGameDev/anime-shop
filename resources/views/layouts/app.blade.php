@@ -9,15 +9,21 @@
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
+    @php
+        $metaDescription = $description ?: 'Thiên đường đồ anime — figure, áo, manga, sticker chính hãng. Đồng hành cùng mọi otaku!';
+        $metaImage       = $ogImage ?: url('/images/og-image.png');
+    @endphp
+    <meta name="description" content="{{ $metaDescription }}">
+
     {{-- Open Graph / link preview --}}
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $ogType }}">
     <meta property="og:site_name" content="{{ config('app.name', 'AnimeShop') }}">
     <meta property="og:title" content="{{ $title ?: config('app.name', 'AnimeShop') }}">
-    <meta property="og:description" content="Thiên đường đồ anime — figure, áo, manga, sticker chính hãng. Đồng hành cùng mọi otaku!">
-    <meta property="og:image" content="{{ config('app.url') }}/images/og-image.png">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:image" content="{{ $metaImage }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="{{ config('app.url') }}/images/og-image.png">
+    <meta name="twitter:image" content="{{ $metaImage }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=be-vietnam-pro:400,500,600,700&display=swap" rel="stylesheet">

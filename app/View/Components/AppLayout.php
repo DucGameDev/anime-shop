@@ -7,8 +7,12 @@ use Illuminate\View\View;
 
 class AppLayout extends Component
 {
-    public function __construct(public string $title = '')
-    {
+    public function __construct(
+        public string $title       = '',
+        public string $description = '',
+        public string $ogImage     = '',
+        public string $ogType      = 'website',
+    ) {
     }
 
     public function render(): View
