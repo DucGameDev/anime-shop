@@ -77,46 +77,56 @@
     </div>
 
     {{-- ===== PRODUCT GRID ===== --}}
-    @if ($products->total() === 0)
-        {{-- Empty state --}}
-        <div class="flex flex-col items-center justify-center py-16 text-center">
-            <svg class="h-20 w-20 text-neutral-muted/50 mb-4" xmlns="http://www.w3.org/2000/svg"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-            </svg>
-            <p class="text-base font-medium text-neutral-text mb-1">
-                Không tìm thấy sản phẩm phù hợp
-            </p>
-            <p class="text-sm text-neutral-muted">
-                Thử tìm từ khóa khác hoặc chọn danh mục khác.
-            </p>
-            <button
-                wire:click="$set('search', ''); setCategory('')"
-                class="mt-4 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
-            >
-                Xem tất cả sản phẩm
-            </button>
-        </div>
-    @else
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
-            @foreach ($products as $product)
-                <x-product-card :product="$product" />
-            @endforeach
-        </div>
 
-        {{-- Pagination + summary --}}
-        <p class="mt-6 text-sm text-neutral-muted text-center">
-            Hiển thị {{ $products->firstItem() }}–{{ $products->lastItem() }}
-            trong {{ $products->total() }} sản phẩm
-            @if ($category) · <span class="font-medium text-neutral-text">{{ $categories->firstWhere('slug', $category)?->name ?? $category }}</span> @endif
-            @if ($search) · khớp "<span class="font-medium text-neutral-text">{{ $search }}</span>" @endif
-        </p>
-
-        @if ($products->hasPages())
-            <div class="mt-2">
-                {{ $products->onEachSide(1)->links('livewire-pagination') }}
+    {{-- Skeleton — hiện trong lúc Livewire đang load --}}
+    <div wire:loading.class.remove="hidden"
+         class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+        @for ($i = 0; $i < 8; $i++)
+            <div class="flex flex-col rounded-xl bg-white shadow-sm overflow-hidden animate-pulse">
+                <div class="aspect-square bg-gray-200"></div>
+                <div class="p-3 space-y-2">
+                    <div class="h-3 rounded-full bg-gray-200 w-4/5"></div>
+                    <div class="h-3 rounded-full bg-gray-200 w-3/5"></div>
+                    <div class="h-4 rounded-full bg-gray-200 w-2/5"></div>
+                    <div class="mt-2 h-9 rounded-lg bg-gray-100"></div>
+                </div>
             </div>
+        @endfor
+    </div>
+
+    {{-- Nội dung thật — ẩn khi đang load --}}
+    <div wire:loading.class="hidden">
+        @if ($products->total() === 0)
+            {{-- Empty state --}}
+            <div class="flex flex-col items-center justify-center py-16 text-center">
+                <svg class="h-20 w-20 text-neutral-muted/50 mb-4" xmlns="http://www.w3.org/2000/svg"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                </svg>
+                <p class="text-base font-medium text-neutral-text mb-1">
+                    Không tìm thấy sản phẩm phù hợp
+                </p>
+                <p class="text-sm text-neutral-muted">
+                    Thử tìm từ khóa khác hoặc chọn danh mục khác.
+                </p>
+                <button
+                    wire:click="$set('search', ''); setCategory('')"
+                    class="mt-4 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+                >
+                    Xem tất cả sản phẩm
+                </button>
+            </div>
+        @else
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+                @foreach ($products as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+
+            {{-- Pagination + summary --}}
+            {{ $products->onEachSide(1)->links('livewire-pagination') }}
         @endif
-    @endif
+    </div>
+
 </div>
