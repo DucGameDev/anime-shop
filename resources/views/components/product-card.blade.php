@@ -34,13 +34,13 @@ $badgeClass    = match ($categorySlug) {
 
     {{-- Thông tin --}}
     <div class="flex flex-col flex-1 gap-2 p-3 md:p-4">
-        <h3 class="text-sm md:text-base font-medium text-neutral-text line-clamp-2 leading-snug min-h-[2.5rem]">
+        <h3 class="text-xs md:text-sm font-medium text-neutral-text line-clamp-2 leading-snug min-h-[2.5rem]">
             <a href="{{ route('products.show', $product) }}" class="hover:text-primary transition-colors">
                 {{ $product->name }}
             </a>
         </h3>
 
-        <p class="text-base md:text-lg font-bold text-primary-dark">
+        <p class="text-sm md:text-base font-bold text-primary-dark">
             {{ number_format($product->price, 0, ',', '.') }}₫
         </p>
 

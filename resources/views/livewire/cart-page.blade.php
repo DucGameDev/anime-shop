@@ -54,7 +54,7 @@
                             <img
                                 src="{{ $item['image_url'] }}"
                                 alt="{{ $item['name'] }}"
-                                class="h-16 w-16 rounded-md object-cover"
+                                class="h-20 w-20 rounded-lg object-cover shadow-sm"
                                 loading="lazy"
                             >
                         </a>
