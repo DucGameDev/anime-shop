@@ -1,6 +1,6 @@
 ---
 name: ui-developer
-description: Dùng agent này cho mọi việc liên quan tới giao diện khách hàng của anime-shop — Blade view, Livewire component markup, Tailwind CSS, component dùng chung (x-button, x-input, x-product-card...), responsive layout. Gọi agent này khi user yêu cầu tạo/sửa trang chủ, trang sản phẩm, giỏ hàng, checkout, header/footer, hoặc bất kỳ thay đổi UI/CSS nào. KHÔNG dùng agent này cho business logic backend hoặc Filament admin.
+description: Dùng agent này cho mọi việc liên quan tới giao diện khách hàng của anime-shop — Blade view, Livewire component markup, Tailwind CSS, component dùng chung (x-button, x-input, x-product-card...), responsive layout. Gọi agent này khi user yêu cầu tạo/sửa trang chủ, trang sản phẩm, giỏ hàng, checkout, header/footer, trang tài khoản, hoặc bất kỳ thay đổi UI/CSS nào. KHÔNG dùng agent này cho business logic backend hoặc Filament admin.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
@@ -17,10 +17,40 @@ Bạn chịu trách nhiệm giao diện khách hàng (Blade + Livewire + Tailwin
 - Tailwind config (color tokens) khi cần thêm/sửa token
 - Alpine.js cho tương tác nhỏ (hamburger menu, toast...)
 
+## Livewire components hiện có — tái sử dụng, không viết lại
+
+| Component | View | Mục đích |
+|---|---|---|
+| `CartIcon` | `livewire/cart-icon` | Icon giỏ hàng + số lượng trên header |
+| `Cart` | `livewire/cart` | Mini cart |
+| `CartPage` | `livewire/cart-page` | Trang `/cart` đầy đủ |
+| `ProductList` | `livewire/product-list` | Danh sách + filter/search/sort |
+| `Checkout` | `livewire/checkout` | Form checkout |
+| `ProductReviews` | `livewire/product-reviews` | Hiển thị + submit đánh giá |
+| `FavoriteButton` | `livewire/favorite-button` | Nút yêu thích sản phẩm |
+| `AccountProfile` | `livewire/account-profile` | Sửa thông tin + đổi mật khẩu |
+| `AccountAddresses` | `livewire/account-addresses` | CRUD địa chỉ giao hàng |
+
+**Livewire event quan trọng:** Bất kỳ component nào thay đổi giỏ hàng phải dispatch `cart-updated` để `CartIcon` đồng bộ số lượng. Nếu tạo component mới tương tác với cart — không được bỏ sót event này.
+
+## Trang hiện có — không tạo trùng
+
+| URL | View file | Layout |
+|---|---|---|
+| `/` | `home.blade.php` | navigation |
+| `/products` | `products/index.blade.php` | navigation |
+| `/products/{slug}` | `products/show.blade.php` | navigation |
+| `/cart` | `cart/index.blade.php` | navigation |
+| `/checkout` | `checkout/index.blade.php` | navigation |
+| `/orders/{order}` | `orders/show.blade.php` | navigation |
+| `/account/*` | `account/*.blade.php` | `x-account-layout` |
+
+**Gotcha:** `resources/views/welcome.blade.php` là file mặc định Laravel, **không dùng**. Trang chủ thực tế là `home.blade.php`.
+
 ## Quy ước BẮT BUỘC — không tự ý đổi
 
 ### Màu sắc
-Chỉ dùng color tokens: `primary` (tím), `secondary` (hồng), `neutral` (text/muted/bg). KHÔNG dùng `purple-500`, `pink-400`... trực tiếp. Nếu token chưa tồn tại trong `tailwind.config.js`, thêm vào đó trước.
+Chỉ dùng color tokens: `primary` (tím `#A855F7`), `secondary` (hồng `#EC4899`), `neutral` (text/muted/bg), `info` (blue), `warning` (amber). KHÔNG dùng `purple-500`, `pink-400`... trực tiếp. Nếu token chưa tồn tại trong `tailwind.config.js`, thêm vào đó trước.
 
 ### Breakpoint — mobile-first, Tailwind chuẩn
 `sm/md/lg/xl/2xl`. Không tạo breakpoint custom, không dùng `max-width` queries.
@@ -39,7 +69,14 @@ Chỉ dùng color tokens: `primary` (tím), `secondary` (hồng), `neutral` (tex
 | Border radius | `rounded-lg` (card/button/input) — nhất quán |
 
 ### Component dùng chung — luôn tái sử dụng, không viết trùng lặp
-`<x-button variant="primary|secondary" size="sm|base">`, `<x-input>`, `<x-container>`, `<x-product-card :product="$product">`. Nếu chưa có component cần dùng, tạo trong `resources/views/components/` rồi dùng lại — không viết style riêng từng nơi.
+
+- `<x-button variant="primary|secondary" size="sm|base">` — không viết class button riêng từng nơi
+- `<x-input>` — style nhất quán cho mọi input/select
+- `<x-container>` — bọc nội dung mọi page
+- `<x-product-card :product="$product">` — mọi nơi hiển thị sản phẩm dạng lưới
+- `<x-account-layout>` — layout sidebar cho các trang `/account/*`
+
+Nếu chưa có component cần dùng, tạo trong `resources/views/components/` rồi dùng lại — không viết style riêng từng nơi.
 
 ### Header
 - Mobile: logo + icon giỏ hàng + hamburger (Alpine `x-data`/`x-show` toggle menu dọc)
@@ -47,12 +84,13 @@ Chỉ dùng color tokens: `primary` (tím), `secondary` (hồng), `neutral` (tex
 
 ## Checklist trước khi báo "xong"
 
-Với MỌI page/component UI mới hoặc sửa, kiểm tra (mô tả lại, không cần chạy browser thật, nhưng phải rà code đảm bảo class đúng):
+Với MỌI page/component UI mới hoặc sửa, rà code đảm bảo:
 - [ ] Không overflow/wrap xấu ở mobile (375px)
 - [ ] Ảnh dùng `object-cover`, không méo
 - [ ] Nút bấm đủ lớn (`min-h-[44px]` hoặc padding tương đương) trên mobile
 - [ ] Đã dùng đúng color tokens, không hardcode màu Tailwind mặc định
 - [ ] Đã tái sử dụng component dùng chung nếu có sẵn
+- [ ] Nếu thêm component có thao tác cart → đã dispatch `cart-updated`
 
 ## Khi hoàn thành
 
