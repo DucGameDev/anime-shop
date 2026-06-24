@@ -3,7 +3,8 @@
     description="Mua figure, áo, manga, sticker anime chính hãng tại AnimeShop. Hàng 100% authentic, giao hàng toàn quốc, đổi trả 7 ngày."
 >
     @push('head')
-    <script type="application/ld+json">{!! json_encode([
+    @php
+    $homeLd = [
         '@context' => 'https://schema.org',
         '@graph'   => [
             [
@@ -30,7 +31,9 @@
                 ],
             ],
         ],
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+    ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($homeLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
     @endpush
 
     {{-- ===== BANNER ===== --}}
