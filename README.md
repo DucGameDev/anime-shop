@@ -8,15 +8,30 @@ A full-featured e-commerce web application for anime merchandise (figures, appar
 
 ## Screenshots
 
-| Storefront | Product Detail |
-|---|---|
-| ![Home](docs/screenshots/home.png) | ![Product](docs/screenshots/product.png) |
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/home.png" width="100%" alt="Storefront"/><br/>
+      <sub><b>Storefront</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/product.png" width="100%" alt="Product Detail"/><br/>
+      <sub><b>Product Detail</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/checkout.png" width="100%" alt="Checkout"/><br/>
+      <sub><b>Checkout</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/admin.png" width="100%" alt="Admin Dashboard"/><br/>
+      <sub><b>Admin Dashboard</b></sub>
+    </td>
+  </tr>
+</table>
 
-| Checkout | Admin Dashboard |
-|---|---|
-| ![Checkout](docs/screenshots/checkout.png) | ![Admin](docs/screenshots/admin.png) |
-
-> Screenshots are in [`docs/screenshots/`](docs/screenshots/). Run the app locally or visit the [live demo](https://shop.ducdev.work) to see it in action.
+> Visit the [live demo](https://shop.ducdev.work) to see it in action.
 
 ---
 
