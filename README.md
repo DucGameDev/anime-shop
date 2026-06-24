@@ -6,6 +6,20 @@ A full-featured e-commerce web application for anime merchandise (figures, appar
 
 ---
 
+## Screenshots
+
+| Storefront | Product Detail |
+|---|---|
+| ![Home](docs/screenshots/home.png) | ![Product](docs/screenshots/product.png) |
+
+| Checkout | Admin Dashboard |
+|---|---|
+| ![Checkout](docs/screenshots/checkout.png) | ![Admin](docs/screenshots/admin.png) |
+
+> Screenshots are in [`docs/screenshots/`](docs/screenshots/). Run the app locally or visit the [live demo](https://shop.ducdev.work) to see it in action.
+
+---
+
 ## Tech Stack
 
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)
@@ -76,6 +90,94 @@ Key patterns used:
 
 **Not used:** Repository pattern — Eloquent + scopes are sufficient.
 
+### Order placement flow
+
+```
+Livewire Checkout
+    ├── validate form + honeypot + reCAPTCHA + rate limit
+    └── PlaceOrderAction::execute()  [DB transaction]
+            ├── lock products for update
+            ├── verify stock & price from DB (not session)
+            ├── Order::create()
+            ├── OrderItem::create() × N
+            │       └── OrderItemObserver → Product stock decrement
+            ├── Voucher::increment('used_count')
+            ├── CartService::clearCart()
+            └── session(['last_order_id' => $order->id])
+```
+
+---
+
+## Technical Highlights
+
+Key engineering decisions worth noting:
+
+- **Reactive UI without a full SPA** — Livewire 3 enables real-time cart updates, live search/filter, and form interactions while keeping all logic server-side. No separate API or JS framework required.
+
+- **Dual authentication guards** — `web` guard for customers (Breeze) and `admin` guard for Filament run fully independently. An admin session does not affect customer session and vice versa.
+
+- **Guest-friendly order history** — Orders store `customer_email` instead of `user_id`. Customers who register after placing a guest order automatically see their order history.
+
+- **DB-verified checkout** — `PlaceOrderAction` re-fetches prices and stock with `lockForUpdate()` inside a transaction, preventing race conditions and price manipulation from tampered sessions.
+
+- **Environment-driven storage** — Switching from local to S3 requires only changing `APP_ENV`. No code changes needed; `ProductResource` and `Product::getImageUrlAttribute()` both read from the same environment check.
+
+- **Soft deletes on products** — Products are never hard-deleted so historical order data remains intact. Admin "delete" moves the product to trash; past order items still resolve correctly via `withTrashed()`.
+
+- **Code quality tooling** — PSR-12 enforced by Laravel Pint, static analysis by PHPStan, `declare(strict_types=1)` on every PHP file.
+
+---
+
+## Security
+
+| Measure | Where |
+|---|---|
+| Honeypot field | Checkout form — catches bots silently |
+| Google reCAPTCHA | Checkout form — human verification |
+| Rate limiting | Checkout — max 5 submissions / minute per IP |
+| CSRF protection | All forms via Laravel middleware |
+| Session encryption | `SESSION_ENCRYPT=true` on production |
+| Secure cookies | `SESSION_SECURE_COOKIE=true` on production |
+| Dual auth guards | Admin panel isolated from customer sessions |
+| Ownership check | Order detail: auth email match **or** `session('last_order_id')` |
+| Verified reviews | Review submission requires a `completed` order containing the product |
+| Soft deletes | Products never hard-deleted; historical order records preserved |
+| Env-only secrets | No API keys or credentials in source code; `.env` is gitignored |
+| No mass assignment | All models use explicit `$fillable` |
+
+---
+
+## Database Schema
+
+10 tables, relationships at a glance:
+
+```
+users ──────────────────────────────────────────┐
+  │                                             │
+  ├── addresses (user_id FK)                    │
+  ├── favorites (user_id FK, product_id FK)     │
+  └── orders (via customer_email, not FK) ──────┼──┐
+                                                │  │
+categories ──── products (category_id FK) ──────┘  │
+  │               │ (soft deletes)                  │
+  │               └── order_items (product_id FK) ──┘
+  │               └── reviews (product_id FK,        │
+  │                            user_id FK,            │
+  │                            order_id FK)           │
+  │                                                   │
+vouchers ── (applied at checkout, code stored on order)
+```
+
+| Table | Key columns |
+|---|---|
+| `users` | role (admin/customer), email |
+| `products` | price decimal(10,2), stock, category_id, deleted_at |
+| `orders` | customer_email, status, payment_method, voucher_code, discount_amount |
+| `order_items` | order_id, product_id, quantity, price decimal(10,2) |
+| `reviews` | product_id, user_id, order_id, rating, comment |
+| `addresses` | user_id, label, recipient_name, is_default |
+| `vouchers` | code, type (percent/fixed), value, min_order, max_uses, used_count |
+
 ---
 
 ## Getting Started
@@ -113,8 +215,7 @@ docker compose exec app php artisan storage:link
 docker compose exec app npm run dev
 ```
 
-The application will be available at **http://localhost:8005**
-phpMyAdmin at **http://localhost:8080**
+App: **http://localhost:8005** · phpMyAdmin: **http://localhost:8080**
 
 ### Create an admin account
 
@@ -134,8 +235,8 @@ docker compose exec app php artisan migrate
 docker compose exec app php artisan migrate:fresh --seed
 
 # Code quality
-docker compose exec app ./vendor/bin/pint           # PSR-12 formatting
-docker compose exec app ./vendor/bin/phpstan analyse # static analysis
+docker compose exec app ./vendor/bin/pint            # PSR-12 formatting
+docker compose exec app ./vendor/bin/phpstan analyse  # static analysis
 
 # Testing
 docker compose exec app php artisan test
@@ -169,16 +270,16 @@ app/
 ├── Actions/          # Single-responsibility business operations
 ├── Services/         # Shared business logic (CartService)
 ├── Observers/        # Model event side-effects
-├── Livewire/         # Reactive UI components
+├── Livewire/         # Reactive UI components (9 components)
 ├── Filament/
-│   ├── Resources/    # Admin CRUD pages
-│   └── Widgets/      # Dashboard widgets
+│   ├── Resources/    # Admin CRUD (6 resources)
+│   └── Widgets/      # Dashboard widgets (5 widgets)
 └── Models/           # Eloquent models with scopes & accessors
 
 resources/views/
-├── components/       # Reusable Blade components (x-button, x-product-card...)
+├── components/       # Reusable Blade components (x-button, x-product-card…)
 ├── livewire/         # Livewire component templates
-└── {feature}/        # Page views (products, cart, checkout, orders, account...)
+└── {feature}/        # Page views (products, cart, checkout, orders, account…)
 ```
 
 ---
@@ -186,10 +287,13 @@ resources/views/
 ## Production Deploy
 
 The project ships with a multi-stage `Dockerfile.prod`:
-1. **Node stage** — builds frontend assets
+1. **Node stage** — builds frontend assets (`npm ci && npm run build`)
 2. **PHP-FPM stage** — production-optimized image (`--no-dev`, opcache, healthcheck)
 
-`docker/entrypoint.prod.sh` runs on container start: waits for DB → migrates → links storage → caches config/routes/views → caches Filament components.
+`docker/entrypoint.prod.sh` runs on container start:
+```
+wait for DB → migrate --force → storage:link → config/route/view cache → filament:cache-components → exec php-fpm
+```
 
 ---
 
