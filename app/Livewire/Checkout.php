@@ -21,7 +21,7 @@ class Checkout extends Component
     public string  $phone             = '';
     public string  $address           = '';
     public string  $note              = '';
-    public string  $paymentMethod     = 'bank_transfer';
+    public string  $paymentMethod     = 'cod';
     public string  $website           = '';         // honeypot
     public string  $recaptchaToken    = '';
     public bool    $isLoggedIn        = false;
@@ -41,7 +41,7 @@ class Checkout extends Component
         'phone'         => ['required', 'string', 'regex:/^[0-9]{10,11}$/'],
         'address'       => 'required|string|min:10|max:500',
         'note'          => 'nullable|string|max:1000',
-        'paymentMethod' => 'required|in:cod,bank_transfer',
+        'paymentMethod' => 'required|in:cod',
     ];
 
     protected array $validationAttributes = [

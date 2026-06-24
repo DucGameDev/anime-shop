@@ -1,4 +1,4 @@
-<x-app-layout title="Giỏ hàng — AnimeShop">
+<x-app-layout title="Giỏ hàng — AnimeShop" robots="noindex, follow">
 
     <x-container class="py-8 lg:py-12">
 

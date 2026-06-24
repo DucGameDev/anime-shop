@@ -1,4 +1,7 @@
-<x-app-layout title="Chính sách vận chuyển — AnimeShop">
+<x-app-layout
+    title="Chính sách vận chuyển — AnimeShop"
+    description="Giao hàng toàn quốc qua GHTK và J&T Express. Miễn phí ship đơn từ 300.000₫. Nội thành 1–2 ngày, tỉnh thành 2–5 ngày. Đóng gói cẩn thận, bồi thường 100% nếu thất lạc."
+>
 
     {{-- Hero strip --}}
     <div class="bg-gradient-to-r from-primary-dark via-primary to-secondary py-10 lg:py-14">

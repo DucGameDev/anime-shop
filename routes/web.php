@@ -110,4 +110,6 @@ Route::middleware('auth')->group(function () {
     })->name('admin.products.import-template');
 });
 
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 require __DIR__.'/auth.php';

@@ -1,4 +1,37 @@
-<x-app-layout title="Trang chủ — AnimeShop">
+<x-app-layout
+    title="AnimeShop — Thiên đường đồ anime chính hãng tại Việt Nam"
+    description="Mua figure, áo, manga, sticker anime chính hãng tại AnimeShop. Hàng 100% authentic, giao hàng toàn quốc, đổi trả 7 ngày."
+>
+    @push('head')
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@graph'   => [
+            [
+                '@type'       => 'WebSite',
+                'name'        => 'AnimeShop',
+                'url'         => url('/'),
+                'description' => 'Thiên đường đồ anime chính hãng tại Việt Nam — figure, áo, manga, sticker.',
+                'potentialAction' => [
+                    '@type'       => 'SearchAction',
+                    'target'      => ['@type' => 'EntryPoint', 'urlTemplate' => url('/products') . '?search={search_term_string}'],
+                    'query-input' => 'required name=search_term_string',
+                ],
+            ],
+            [
+                '@type' => 'Organization',
+                'name'  => 'AnimeShop',
+                'url'   => url('/'),
+                'logo'  => url('/images/og-image.png'),
+                'contactPoint' => [
+                    '@type'       => 'ContactPoint',
+                    'email'       => 'ducdev.work@gmail.com',
+                    'contactType' => 'customer service',
+                    'availableLanguage' => 'Vietnamese',
+                ],
+            ],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+    @endpush
 
     {{-- ===== BANNER ===== --}}
     <section class="relative overflow-hidden">

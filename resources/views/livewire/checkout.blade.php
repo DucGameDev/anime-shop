@@ -159,38 +159,15 @@
                         {{-- Phương thức thanh toán --}}
                         <div>
                             <label class="mb-2 block text-sm font-medium text-neutral-text">Phương thức thanh toán</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-
-                                <label class="flex cursor-pointer items-start gap-3 rounded-lg border-2 p-4 transition-colors
-                                    {{ $paymentMethod === 'bank_transfer' ? 'border-primary bg-primary-light' : 'border-gray-200 bg-white hover:border-gray-300' }}">
-                                    <input type="radio" wire:model.live="paymentMethod" value="bank_transfer" class="sr-only" />
-                                    <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 mt-0.5
-                                        {{ $paymentMethod === 'bank_transfer' ? 'border-primary' : 'border-gray-300' }}">
-                                        @if ($paymentMethod === 'bank_transfer')
-                                            <div class="h-2.5 w-2.5 rounded-full bg-primary"></div>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-semibold text-neutral-text">Chuyển khoản ngân hàng</p>
-                                        <p class="mt-0.5 text-xs text-neutral-muted">Quét mã QR hoặc chuyển khoản thủ công</p>
-                                    </div>
-                                </label>
-
-                                <label class="flex cursor-pointer items-start gap-3 rounded-lg border-2 p-4 transition-colors
-                                    {{ $paymentMethod === 'cod' ? 'border-primary bg-primary-light' : 'border-gray-200 bg-white hover:border-gray-300' }}">
-                                    <input type="radio" wire:model.live="paymentMethod" value="cod" class="sr-only" />
-                                    <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 mt-0.5
-                                        {{ $paymentMethod === 'cod' ? 'border-primary' : 'border-gray-300' }}">
-                                        @if ($paymentMethod === 'cod')
-                                            <div class="h-2.5 w-2.5 rounded-full bg-primary"></div>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-semibold text-neutral-text">Thanh toán khi nhận hàng</p>
-                                        <p class="mt-0.5 text-xs text-neutral-muted">Trả tiền mặt cho người giao hàng</p>
-                                    </div>
-                                </label>
-
+                            <div class="flex items-start gap-3 rounded-lg border-2 border-primary bg-primary-light p-4">
+                                <input type="radio" wire:model.live="paymentMethod" value="cod" class="sr-only" />
+                                <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-primary mt-0.5">
+                                    <div class="h-2.5 w-2.5 rounded-full bg-primary"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-neutral-text">Thanh toán khi nhận hàng</p>
+                                    <p class="mt-0.5 text-xs text-neutral-muted">Trả tiền mặt cho người giao hàng</p>
+                                </div>
                             </div>
                         </div>
                     </div>

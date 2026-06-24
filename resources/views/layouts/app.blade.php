@@ -7,6 +7,9 @@
 
     <title>{{ $title ?: config('app.name', 'AnimeShop') }}</title>
 
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta name="robots" content="{{ $robots }}">
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     @php
@@ -24,6 +27,9 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="{{ $metaImage }}">
+    <meta property="og:locale" content="vi_VN">
+    <meta name="twitter:title" content="{{ $title ?: config('app.name', 'AnimeShop') }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=be-vietnam-pro:400,500,600,700&display=swap" rel="stylesheet">

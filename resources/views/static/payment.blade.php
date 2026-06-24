@@ -1,4 +1,7 @@
-<x-app-layout title="Hình thức thanh toán — AnimeShop">
+<x-app-layout
+    title="Hình thức thanh toán — AnimeShop"
+    description="AnimeShop hỗ trợ 2 hình thức thanh toán: chuyển khoản QR VietQR (xác nhận trong 30 phút) và COD tiền mặt khi nhận hàng (nội thành HCM & Hà Nội). An toàn, không phụ phí ẩn."
+>
 
     {{-- Hero strip --}}
     <div class="bg-gradient-to-r from-primary-dark via-primary to-secondary py-10 lg:py-14">

@@ -1,4 +1,7 @@
-<x-app-layout title="Sản phẩm — AnimeShop">
+<x-app-layout
+    title="Tất cả sản phẩm — AnimeShop"
+    description="Khám phá hàng ngàn sản phẩm anime chính hãng: figure, áo, manga, sticker. Bộ lọc theo danh mục, tìm kiếm nhanh, giao hàng toàn quốc."
+>
 
     <x-container class="py-8 lg:py-12">
 

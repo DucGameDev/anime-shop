@@ -12,6 +12,7 @@ class AppLayout extends Component
         public string $description = '',
         public string $ogImage     = '',
         public string $ogType      = 'website',
+        public string $robots      = 'index, follow',
     ) {
     }
 

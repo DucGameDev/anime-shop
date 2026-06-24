@@ -1,4 +1,7 @@
-<x-app-layout title="Chính sách đổi trả — AnimeShop">
+<x-app-layout
+    title="Chính sách đổi trả — AnimeShop"
+    description="Đổi trả trong 7 ngày nếu sản phẩm lỗi nhà sản xuất, giao sai hoặc hỏng do vận chuyển. Hoàn tiền 100% trong 3–5 ngày làm việc. Hàng chính hãng có tem nhập khẩu."
+>
 
     {{-- Hero strip --}}
     <div class="bg-gradient-to-r from-primary-dark via-primary to-secondary py-10 lg:py-14">

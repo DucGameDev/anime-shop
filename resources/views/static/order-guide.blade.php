@@ -1,4 +1,7 @@
-<x-app-layout title="Hướng dẫn đặt hàng — AnimeShop">
+<x-app-layout
+    title="Hướng dẫn đặt hàng — AnimeShop"
+    description="Hướng dẫn 6 bước đặt hàng tại AnimeShop: tìm sản phẩm, thêm giỏ hàng, thanh toán chuyển khoản. Đơn giản, nhanh chóng, an toàn."
+>
 
     {{-- Hero strip --}}
     <div class="bg-gradient-to-r from-primary-dark via-primary to-secondary py-10 lg:py-14">
