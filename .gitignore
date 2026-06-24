@@ -26,3 +26,7 @@ prompts-anime-shop.md
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Claude AI tooling
+.claude/
+CLAUDE.md
