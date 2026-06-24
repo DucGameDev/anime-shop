@@ -1,59 +1,198 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Anime Shop
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-featured e-commerce web application for anime merchandise (figures, apparel, manga, stickers), built with Laravel 12, Livewire 3, and Filament 3.
 
-## About Laravel
+**Live demo:** [shop.ducdev.work](https://shop.ducdev.work)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)
+![Livewire](https://img.shields.io/badge/Livewire-3.5-4E56A6?style=flat&logo=livewire&logoColor=white)
+![Filament](https://img.shields.io/badge/Filament-3-F59E0B?style=flat)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-compose-2496ED?style=flat&logo=docker&logoColor=white)
 
-## Learning Laravel
+| Layer | Technology |
+|---|---|
+| Backend | Laravel 12, PHP 8.2 |
+| Reactive UI | Livewire 3.5 + Alpine.js 3 |
+| Admin panel | Filament 3 |
+| Styling | Tailwind CSS 3 (mobile-first) |
+| Database | MySQL 8.0 |
+| Storage | Local disk / S3-compatible (AWS S3, Spaces, R2) |
+| Infrastructure | Docker + Nginx + PHP-FPM |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Features
 
-## Laravel Sponsors
+### Customer-facing
+- **Product catalog** — browse by category, search, sort (newest / price / popular)
+- **Product detail** — image, description, stock status, related products
+- **Shopping cart** — session-based, no login required; real-time icon update via Livewire events
+- **Checkout** — guest or authenticated, address book, voucher/discount codes, note field; protected with honeypot + reCAPTCHA + rate limiting
+- **Multiple payment methods** — Cash on Delivery (COD) and bank transfer
+- **Order tracking** — order confirmation page with status badge; guest access via session token
+- **Verified reviews** — only customers with a completed order can leave a review
+- **Wishlist** — save favourite products (requires login)
+- **User account** — order history, saved addresses, profile & password management
+- **Static pages** — order guide, payment info, shipping policy, returns policy
+- **XML sitemap** — auto-generated for products and categories
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Admin panel (`/admin`)
+- **Dashboard** — 9 stat cards (today's orders & revenue, monthly, pending, low stock, out of stock), revenue line chart, order status chart, latest orders table, recent activity feed
+- **Products** — full CRUD with image upload (local or S3), bulk import via XLSX
+- **Categories** — CRUD with deletion guard (cannot delete if products exist)
+- **Orders** — status management (`unpaid → pending → shipped → completed / cancelled`), read-only order items
+- **Vouchers** — CRUD for discount codes (percent or fixed), expiry, min order, usage limit
+- **Users** — read-only customer view with order stats
+- **Admin accounts** — manage admin users independently from customers
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Architecture
 
-## Contributing
+This project follows a layered architecture to keep controllers thin and business logic testable:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+HTTP Request
+    └── Controller / Livewire component  (routing & UI state only)
+            └── Action / Service         (business logic)
+                    └── Model / Observer  (data & side-effects)
+```
 
-## Code of Conduct
+Key patterns used:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Pattern | Example | When |
+|---|---|---|
+| **Action** | `PlaceOrderAction`, `ImportProductsAction` | One specific business operation |
+| **Service** | `CartService` | Shared logic across multiple entry points |
+| **Observer** | `OrderItemObserver` | Automatic side-effects on model events |
+| **Eloquent scope** | `Product::scopeInStock()` | Reusable query constraints |
 
-## Security Vulnerabilities
+**Not used:** Repository pattern — Eloquent + scopes are sufficient.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
+
+## Getting Started
+
+### Prerequisites
+- Docker + Docker Compose
+
+### Setup
+
+```bash
+# 1. Clone the repo
+git clone <repo-url> anime-shop
+cd anime-shop
+
+# 2. Copy environment file and fill in values
+cp .env.example .env
+
+# 3. Start containers
+docker compose up -d
+
+# 4. Install dependencies
+docker compose exec app composer install
+docker compose exec app npm install
+
+# 5. Generate app key
+docker compose exec app php artisan key:generate
+
+# 6. Run migrations and seed sample data
+docker compose exec app php artisan migrate --seed
+
+# 7. Link storage
+docker compose exec app php artisan storage:link
+
+# 8. Build assets
+docker compose exec app npm run dev
+```
+
+The application will be available at **http://localhost:8005**
+phpMyAdmin at **http://localhost:8080**
+
+### Create an admin account
+
+```bash
+docker compose exec app php artisan make:filament-user
+```
+
+Admin panel: **http://localhost:8005/admin**
+
+---
+
+## Key Commands
+
+```bash
+# Migrations
+docker compose exec app php artisan migrate
+docker compose exec app php artisan migrate:fresh --seed
+
+# Code quality
+docker compose exec app ./vendor/bin/pint           # PSR-12 formatting
+docker compose exec app ./vendor/bin/phpstan analyse # static analysis
+
+# Testing
+docker compose exec app php artisan test
+
+# Production build
+docker compose exec app npm run build
+```
+
+---
+
+## Environment Variables
+
+Key variables beyond Laravel defaults:
+
+| Variable | Purpose |
+|---|---|
+| `APP_ENV` | Controls storage disk: `local` → public disk, `production` → S3 |
+| `RECAPTCHA_SITE_KEY` / `RECAPTCHA_SECRET_KEY` | Checkout spam protection |
+| `AWS_*` | S3-compatible storage (S3, DigitalOcean Spaces, Cloudflare R2) |
+| `SESSION_ENCRYPT` | Set `true` on production |
+| `SESSION_SECURE_COOKIE` | Set `true` on production |
+
+See `.env.example` for the full list.
+
+---
+
+## Project Structure
+
+```
+app/
+├── Actions/          # Single-responsibility business operations
+├── Services/         # Shared business logic (CartService)
+├── Observers/        # Model event side-effects
+├── Livewire/         # Reactive UI components
+├── Filament/
+│   ├── Resources/    # Admin CRUD pages
+│   └── Widgets/      # Dashboard widgets
+└── Models/           # Eloquent models with scopes & accessors
+
+resources/views/
+├── components/       # Reusable Blade components (x-button, x-product-card...)
+├── livewire/         # Livewire component templates
+└── {feature}/        # Page views (products, cart, checkout, orders, account...)
+```
+
+---
+
+## Production Deploy
+
+The project ships with a multi-stage `Dockerfile.prod`:
+1. **Node stage** — builds frontend assets
+2. **PHP-FPM stage** — production-optimized image (`--no-dev`, opcache, healthcheck)
+
+`docker/entrypoint.prod.sh` runs on container start: waits for DB → migrates → links storage → caches config/routes/views → caches Filament components.
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT
